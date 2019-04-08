@@ -2,7 +2,7 @@ import { WavDecoder } from './plugins/WavDecoder.js';
 import { WaveRender } from './plugins/WaveRender.js';
 import { DataTransformer } from './plugins/DataTransformer.js';
 
-const PLUGINS = {
+let PLUGINS = {
     Decorder: WavDecoder,
     Render: WaveRender,
     DataTransformer,
@@ -29,9 +29,9 @@ export class WaveVisual {
      */
     static use(plugins){
         const plugsKeys = Object.keys(plugins||{});
-        const extraPluginKesy = plugsKeys.filter( name => PLUGINS[name]);
-        if(extraPlugin.length){
-            throw `[ ${ extraPluginKesy.join(' , ') } ] is not support.` 
+        const extraPluginKeys = plugsKeys.filter( name => !PLUGINS[name]);
+        if(extraPluginKeys.length){
+            throw `[ ${ extraPluginKeys.join(' , ') } ] is not support.` 
         }
         PLUGINS = {
             ...PLUGINS,
