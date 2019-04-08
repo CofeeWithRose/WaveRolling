@@ -25,7 +25,7 @@ class WaveRender{
         const startX = this.canvas.width * startPercent;
         const endX = this.canvas.width * endPercent;
         const stepnum = Math.max (Math.floor( devicePixelRatio * 100 *  (endX - startX) ) , 10);
-        const stepIndex =  Math.floor(floatArrayData.length/stepnum);
+        const stepIndex = Math.max( Math.floor(floatArrayData.length/stepnum), 1);
         const stepX = ( endX - startX )/ stepnum;
         this.context.beginPath();
         for(let i = 0; i < stepnum; i++){
