@@ -6,7 +6,7 @@ export class WaveRender {
         this.color = color || '#000000';
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext('2d');
-        this.canvas.width = document.documentElement.clientWidth; 
+        this.canvas.width = window.screen.width; 
         this.canvas.style.width = '100%';
         this.canvas.style.height = '100%';
         this.canvas.height = container.clientHeight;

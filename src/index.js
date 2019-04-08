@@ -1,9 +1,6 @@
-// import { WavDecoder } from './util/WavDecoder.js';
-// import { WaveRender } from './util/WaveRender.js';
 import { WaveVisual } from './WaveVisual.js';
 
 const waveVisual = new WaveVisual(document.querySelector('#container'));
-
 window.onSelect = function onSelect(event){
     if(!event.target.files[0]) return;
     if(waveVisual){
@@ -18,6 +15,7 @@ window.onSelect = function onSelect(event){
 }
 
 
-window.onLoadAudio = function onLoadAudio(url){
-    waveVisual.load(url);
+window.onLoadAudio = function onLoadAudio(){
+    
+    waveVisual.load(`./source/${document.querySelector('#input').value}.wav`);
 }

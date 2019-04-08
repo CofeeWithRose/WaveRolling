@@ -4,13 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./build/serve.js",
+    "build": " webpack",
+    "serve": "node ./build/serve.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "copy-webpack-plugin": "^5.0.2",
+    "html-webpack-plugin": "^3.2.0",
     "koa-static": "^5.0.0",
-    "koa2": "^2.0.0-alpha.7"
-  }
+    "koa2": "^2.0.0-alpha.7",
+    "qs": "^6.7.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {}
 }

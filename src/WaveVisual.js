@@ -1,8 +1,14 @@
-import { WavDecoder } from './util/WavDecoder.js';
-import { WaveRender } from './util/WaveRender.js';
+import { WavDecoder } from './plugins/WavDecoder.js';
+import { WaveRender } from './plugins/WaveRender.js';
+import { DataTransformer } from './plugins/DataTransformer.js';
 
-export class WaveVisual{
+const PLUGINS = {
+    Decorder: WavDecoder,
+    Render: WaveRender,
+    DataTransformer,
+}
 
+export class WaveVisual {
     
     /**
      * @param { HTMLElement } containner 
@@ -10,24 +16,48 @@ export class WaveVisual{
      */
     constructor(containner, options){
         const { color } = options||{};
-        this._waveRender = new WaveRender( containner, { color } );
+        this._waveRender = new PLUGINS.Render( containner, { color } );
     }
 
     // _waveRender;
     // _decoder;
 
     /**
+     * use pugins, it will effect all the instance of WaveVisual.
+     * 
+     * @param { { Decorder?, Render?, DataTransformer? } } plugins. 
+     */
+    static use(plugins){
+        const plugsKeys = Object.keys(plugins||{});
+        const extraPluginKesy = plugsKeys.filter( name => PLUGINS[name]);
+        if(extraPlugin.length){
+            throw `[ ${ extraPluginKesy.join(' , ') } ] is not support.` 
+        }
+        PLUGINS = {
+            ...PLUGINS,
+            ...plugins,
+        }
+    }
+
+    /**
+     * list all plugins.
+     */
+    static plugins(){
+        return { ...PLUGINS };
+    }
+
+    /**
      * 
      * @param { string| ArrayBuffer } audioUrl 
      * @param { object } data 
-     * @param { 'GET'|'POST'} method 
+     * @param { 'GET'|'POST'|'PUT'|'DELETE'} method 
      */
     load(audioUrl, data, method){
 
         if(this._decoder){
             this._decoder.abort();
         }
-        this._decoder = new WavDecoder();
+        this._decoder = new PLUGINS.Decorder();
         
         this._waveRender.clear();
         this._waveRender.drawCenterLine();
@@ -48,6 +78,7 @@ export class WaveVisual{
         if(this._decoder){
             this._decoder.abort();
         }
+        this.onabort();
     }
 
     onerror(error){
@@ -55,19 +86,18 @@ export class WaveVisual{
     }
 
     onabort(){
-        console.warn('WaveVisual abort.');
+        // console.warn('WaveVisual abort.');
     }
 
 
-    _loadAudio(url, data, method ){
-
-
+    _loadAudio(srcUrl, srcData, method ){
         const controller = new AbortController()
         const signal = controller.signal;
+        const { url, body } = PLUGINS.DataTransformer( srcUrl, srcData, method  );
         const option = {
             signal,
-            method: method||'GET',
-            body: data instanceof FormData? data : JSON.stringify(data),
+            method,
+            body,
         }
         fetch(url,option).then( rsp => {
     
@@ -87,8 +117,9 @@ export class WaveVisual{
             });
             this._decoder.onabort = () => { 
                 controller.abort(); 
-                fetchReader.cancel();
-                this.onabort(); 
+                fetchReader.cancel().catch( error => {
+                    console.warn('WaveVisual load canceld.');
+                });
             };
     
             fetchReader.read().then( data => {
