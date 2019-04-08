@@ -16,6 +16,6 @@ module.exports = {
     plugins: [
         new webpack.SourceMapDevToolPlugin({  filename: '[name].js.map', }),
         new HtmlWebpackPlugin({template: './src/index.html'}),
-        // new CopyWebpackPlugin( [ {from: './src/source/**/*' , to: './source/**/*'}]),
+        new CopyWebpackPlugin( [ {from: './src/source/**/*' , to: './source/**/*'}]),
       ]
 };

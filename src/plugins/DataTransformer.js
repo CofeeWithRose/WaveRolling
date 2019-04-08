@@ -7,7 +7,8 @@ export function DataTransformer(url, data, method){
         data = data instanceof FormData? null:  qs.stringify(data);
         url = `${url}?${data}`;
         data = null;
+    }else{
+        data = data instanceof FormData? data :  JSON.stringify(data);
     }
-    const body = data;
-    return { url, body, method };
+    return { url, body: data };
 }
