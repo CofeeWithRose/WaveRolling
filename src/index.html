@@ -8,7 +8,8 @@
 </head>
 <body>
     <input type="file" onchange="onSelect(event)"/>
-    <!-- <button onclick="onLoadAudio('./source/dangerous.wav')" >dangerous(70.2M) </button> -->
+    audio file name: <input type="text" id="input" value="test"/>
+    <button onclick="onLoadAudio(`./source/${document.querySelector('#input').value}.wav`)" >test</button>
     <!-- <button onclick="onLoadAudio('./source/tst.wav')" >tst(331M) </button>
     <button onclick="onLoadAudio('./source/dangerous20-16.wav')" >dangerous20-16(1.37G) </button>
     <button onclick="onLoadAudio('./source/dangerous26-16.wav')" >dangerous26-16(1.78G) </button>

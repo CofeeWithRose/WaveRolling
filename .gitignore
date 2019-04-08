@@ -1,2 +1,3 @@
 node_modules
-src/source
+src/source/*.wav
+package-lock.json

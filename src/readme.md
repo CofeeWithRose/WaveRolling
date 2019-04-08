@@ -24,3 +24,10 @@ start the project
 ---
     open address in http://localhost:3000
 
+#### step4
+
+    put a test.wav file in /src/source/
+
+
+
+

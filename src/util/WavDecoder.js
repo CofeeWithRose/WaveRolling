@@ -3,9 +3,6 @@
 */
 export  class WavDecoder{
 
-    constructor(audioContext){
-
-    }
    /**
     * the decoded data byte length of input ArrayBuffer.
     */
@@ -188,7 +185,6 @@ export  class WavDecoder{
            }else{
                this.onwaitting();
            }
-
    }
 
    _getRangeAuidoBuffer({segments, length: rangeLength}){
