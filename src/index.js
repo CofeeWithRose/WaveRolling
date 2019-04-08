@@ -145,6 +145,7 @@ class WavAsycDecoder{
         let offset = 0;
 
         if( this._tempBufferRange){
+          
             const maxLength = this._totalDataBufferLength - this._cachedDataByteLength;
             let needLength  = this._perDataBufferPiceLength - this._tempBufferRange.length;
             needLength = needLength <= maxLength? needLength : maxLength; 
@@ -274,7 +275,8 @@ class WavAsycDecoder{
 
         const view = new DataView( buffer );
     
-        this._dataLengthOffset = 16 + 4 + 4 + view.getUint32( 16, true );
+        // this._dataLengthOffset = 16 + 4 + 4 + view.getUint32( 16, true );
+        this._dataLengthOffset = this._getDataOffset(view);
         const totalDataByteLength = view.getUint32( this._dataLengthOffset, true );
         const numOfChannels = view.getUint16( 22, true );
         const sampleRate = view.getUint32( 24, true );
@@ -287,6 +289,28 @@ class WavAsycDecoder{
             dataBuffer,
             totalDataByteLength,  
         };
+    }
+
+    _getDataOffset(headView){
+
+        let offset = 16 + 4  + headView.getUint32( 16, true );
+        let flag = '';
+        while(true){
+            flag = this._getString( headView, offset, 4 );
+            if( 'data' === flag ){
+                return  4 + offset;
+            }else{
+                offset += headView.getUint32( offset + 4, true ) + 4 + 4;
+            }
+        }
+    }
+
+    _getString(dataview,offset, length){
+        let str = '';
+        for( let extraOffset = 0; extraOffset < length; extraOffset++ ){
+            str += String.fromCharCode( dataview.getUint8( offset + extraOffset ) );
+        }
+        return str;
     }
   
     onprocess(data){
