@@ -14,18 +14,13 @@ start the project
 ### step1
 
 --- 
-    create source dir in src
+   npm i
 
 ### step2
 ---
-    copy sevaral wav audio files rename as dangerous.wav dangerous20-16.wav tst.wav to src/source
+    npm run start
 
 ### step3
 ---
-    npm run start
-
-### step4
-```
     open address in http://localhost:3000
-
 

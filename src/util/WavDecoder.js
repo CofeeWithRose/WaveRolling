@@ -3,6 +3,9 @@
 */
 export  class WavDecoder{
 
+    constructor(audioContext){
+
+    }
    /**
     * the decoded data byte length of input ArrayBuffer.
     */
