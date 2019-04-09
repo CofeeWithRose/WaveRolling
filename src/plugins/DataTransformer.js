@@ -10,5 +10,8 @@ export function DataTransformer(url, data, method){
     }else{
         data = data instanceof FormData? data :  JSON.stringify(data);
     }
-    return { url, body: data };
+    return { 
+        url, 
+        fetchOptions: { body: data } 
+    };
 }

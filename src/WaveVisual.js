@@ -93,13 +93,13 @@ export class WaveVisual {
     _loadAudio(srcUrl, srcData, method ){
         const controller = new AbortController()
         const signal = controller.signal;
-        const { url, body } = PLUGINS.DataTransformer( srcUrl, srcData, method  );
+        const { url, fetchOptions } = PLUGINS.DataTransformer( srcUrl, srcData, method  );
         const option = {
             signal,
             method,
-            body,
+            ...fetchOptions,
         }
-        fetch(url,option).then( rsp => {
+        fetch( url, option ).then( rsp => {
     
             const fetchReader = rsp.body.getReader();
     

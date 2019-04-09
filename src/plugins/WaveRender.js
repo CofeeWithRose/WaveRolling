@@ -1,12 +1,17 @@
 
 export class WaveRender {
  
+    /**
+     * 
+     * @param { HTMLElement } container 
+     * @param { { color: Color } } options 
+     */
     constructor(container, options ){
         const { color } = options ||{};
         this._color = color || '#000000';
         this._canvas = document.createElement('canvas');
         this._context = this._canvas.getContext('2d');
-        this._canvas.width = window.screen.width; 
+        this._canvas.width = Math.max (window.screen.width, window.screen.height); 
         this._canvas.style.width = '100%';
         this._canvas.style.height = '100%';
         this._canvas.height = container.clientHeight;
