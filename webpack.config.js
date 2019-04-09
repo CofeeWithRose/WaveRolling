@@ -12,7 +12,21 @@ module.exports = {
     // context: path.join(__dirname, 'src'),
     devtool: false,
     mode: 'development',
-
+    module:{
+        rules: [
+            {
+                test: /\.m?js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                  loader: 'babel-loader',
+                  options: {
+                    presets: ['@babel/preset-env']
+                  }
+                }
+            }
+          ]
+    },
+    
     plugins: [
         new webpack.SourceMapDevToolPlugin({  filename: '[name].js.map', }),
         new HtmlWebpackPlugin({template: './src/index.html'}),

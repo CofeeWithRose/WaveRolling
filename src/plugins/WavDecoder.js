@@ -42,13 +42,15 @@ export  class WavDecoder{
 
        this._dataBufferRangeList = [];
        
-       const {  sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength } = this._getWavInfo(firstPiceArrayBuffer);
-       this._audioContext = new OfflineAudioContext(numOfChannels, sampleRate, sampleRate);
+       const {  sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide } = this._getWavInfo(firstPiceArrayBuffer);
+
+       this._perDataBufferPiceLength = 2 * sampleRate * numOfChannels *  bitWide/8;
+      
+       this._audioContext = new OfflineAudioContext(numOfChannels, this._perDataBufferPiceLength , sampleRate);
        
        this._totalDataBufferLength = totalDataByteLength;
 
        this._headerBuffer = headBuffer;
-       this._perDataBufferPiceLength = sampleRate;
        this._decodedDataByteLength = 0;
        this._lastCacheIndex = 0;
        
@@ -158,27 +160,28 @@ export  class WavDecoder{
            if(dataRange){
                const audioData = this._getRangeAuidoBuffer(dataRange);
 
-               // const audio = document.createElement('audio');
-               // audio.controls = true;
-               // audio.src = URL.createObjectURL(new File([audioData], 'audio.wav',{type: 'audo/wav'}));
-               // document.body.appendChild(audio);
+            //    const audio = document.createElement('audio');
+            //    audio.controls = true;
+            //    audio.src = URL.createObjectURL(new File([audioData], 'audio.wav',{type: 'audo/wav'}));
+            //    document.body.appendChild(audio);
                
                this._audioContext.decodeAudioData(audioData, data => {
                    const rangeStart = this._decodedDataByteLength;
                    this._decodedDataByteLength += dataRange.length;
                    
+                    this.onprocess({
+                        data,
+                        rangeStart,
+                        rangeEnd: this._decodedDataByteLength,
+                        total: this._totalDataBufferLength, 
+                    });
                    if( this._decodedDataByteLength >= this._totalDataBufferLength ){ 
                        this._dataBufferCache = null;  
                        this.oncomplete();
                    }else{
                        this._decodeBufferPice();
                    }
-                   this.onprocess({
-                       data,
-                       rangeStart,
-                       rangeEnd: this._decodedDataByteLength,
-                       total: this._totalDataBufferLength, 
-                   });
+                   
                  
                    
                }, this.onerror);
@@ -188,7 +191,6 @@ export  class WavDecoder{
    }
 
    _getRangeAuidoBuffer({segments, length: rangeLength}){
-       // console.log( 'rangeLength: ', rangeLength,'segments: ', segments )
        const dataBuffer = new ArrayBuffer( this._headerBuffer.byteLength + rangeLength);
        const dataView = new Uint8Array(dataBuffer);
        let viewOffset = 0;
@@ -224,22 +226,29 @@ export  class WavDecoder{
 
    _getWavInfo(buffer){
 
-       const view = new DataView( buffer );
-   
-       // this._dataLengthOffset = 16 + 4 + 4 + view.getUint32( 16, true );
-       this._dataLengthOffset = this._getDataOffset(view);
-       const totalDataByteLength = view.getUint32( this._dataLengthOffset, true );
-       const numOfChannels = view.getUint16( 22, true );
-       const sampleRate = view.getUint32( 24, true );
-       const headBuffer = buffer.slice(0, this._dataLengthOffset+4);
-       const dataBuffer = buffer.slice(this._dataLengthOffset+4, this._dataLengthOffset+4 + totalDataByteLength);
-       return {
-           sampleRate,
-           numOfChannels,
-           headBuffer,
-           dataBuffer,
-           totalDataByteLength,  
-       };
+        const view = new DataView( buffer );
+        const RIFF = this._getString(view, 0, 4);
+        const WAVE = this._getString(view, 8, 4);
+        const isPCM =  view.getUint16( 20, true );
+        if('RIFF' !== RIFF || 'WAVE' !==WAVE || 1 !==isPCM ){
+            this.onerror(new Error('Format Error.'));
+            throw 'Format Error';
+        }
+        this._dataLengthOffset = this._getDataOffset(view);
+        const totalDataByteLength = view.getUint32( this._dataLengthOffset, true );
+        const numOfChannels = view.getUint16( 22, true );
+        const bitWide = view.getUint16( 34, true );
+        const sampleRate = view.getUint32( 24, true );
+        const headBuffer = buffer.slice(0, this._dataLengthOffset+4);
+        const dataBuffer = buffer.slice(this._dataLengthOffset+4, this._dataLengthOffset+4 + totalDataByteLength);
+        return {
+            bitWide,
+            sampleRate,
+            numOfChannels,
+            headBuffer,
+            dataBuffer,
+            totalDataByteLength,  
+        };
    }
 
    _getDataOffset(headView){
