@@ -15,15 +15,17 @@ export class WaveVisual {
      * @param { {color} } options 
      */
     constructor(containner, options){
+        this._plugins = { ...PLUGINS };
         const { color } = options||{};
-        this._waveRender = new PLUGINS.Render( containner, { color } );
+        this._render = new this._plugins.Render( containner, { color } );
     }
 
-    // _waveRender;
+    // _plugins;
+    // _render;
     // _decoder;
 
     /**
-     * use pugins, it will effect all the instance of WaveVisual.
+     * after use pugins, it will effect all the instance of WaveVisual later.
      * 
      * @param { { Decorder?, Render?, DataTransformer? } } plugins. 
      */
@@ -57,12 +59,12 @@ export class WaveVisual {
         if(this._decoder){
             this._decoder.abort();
         }
-        this._decoder = new PLUGINS.Decorder();
+        this._decoder = new this._plugins.Decorder();
         
-        this._waveRender.clear();
-        this._waveRender.drawCenterLine();
+        this._render.clear();
+        this._render.reset();
         this._decoder.onprocess = data => {
-            this._waveRender.render( data.data, data.rangeStart/data.total,  data.rangeEnd/data.total );
+            this._render.render( data.data, data.rangeStart/data.total,  data.rangeEnd/data.total );
         }
         this._decoder.onerror = this.onerror;
         if(audioUrl instanceof ArrayBuffer){
@@ -93,7 +95,7 @@ export class WaveVisual {
     _loadAudio(srcUrl, srcData, method ){
         const controller = new AbortController()
         const signal = controller.signal;
-        const { url, fetchOptions } = PLUGINS.DataTransformer( srcUrl, srcData, method  );
+        const { url, fetchOptions } = this._plugins.DataTransformer( srcUrl, srcData, method  );
         const option = {
             signal,
             method,

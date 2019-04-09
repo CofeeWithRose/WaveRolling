@@ -1,8 +1,9 @@
 
+
 export class WaveRender {
  
     /**
-     * 
+     * initial the canvas.
      * @param { HTMLElement } container 
      * @param { { color: Color } } options 
      */
@@ -16,7 +17,7 @@ export class WaveRender {
         this._canvas.style.height = '100%';
         this._canvas.height = container.clientHeight;
         this._halfHeight = this._canvas.height * 0.5;
-        this.drawCenterLine();
+        this.reset();
         container.appendChild(this._canvas);
     }
     // _color;
@@ -24,13 +25,14 @@ export class WaveRender {
     // _canvas;
     // _halfHeight;
 
-    drawCenterLine(){
+    reset(){
         this._context.beginPath();
         this._context.strokeStyle = this._color;
         this._context.moveTo(0, this._halfHeight);
         this._context.lineTo(this._canvas.width, this._halfHeight);
         this._context.stroke()
     }
+
     render(audioBuffer, startPercent, endPercent){
         const floatArrayData = audioBuffer.getChannelData(0);
         const startX = this._canvas.width * startPercent;

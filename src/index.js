@@ -1,5 +1,5 @@
 import { WaveVisual } from './WaveVisual.js';
-import qs from 'qs'
+// import qs from 'qs'
 
 // export function DataTransformer(url, data, method){
 //     url = url || '';
