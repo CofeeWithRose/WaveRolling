@@ -44,7 +44,6 @@ export class WaveRender {
         this._context.strokeStyle = this._color;
         for(let i = 0; i < stepnum; i++){
             const x = startX+ stepX*i;
-            // console.log('x/devicePixelRatio： ', x, 'this.halfHeight + this.halfHeight*floatArrayData[i * stepIndex]: ', this.halfHeight + this.halfHeight*floatArrayData[i * stepIndex] )
             this._context.lineTo( x,  this._halfHeight + this._halfHeight*floatArrayData[i * stepIndex]);
         }
         this._context.stroke()
