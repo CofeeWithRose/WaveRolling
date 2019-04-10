@@ -30,6 +30,10 @@ export class WavDecoder {
 
     // _cacheOffset;
 
+    // _byteSpeed
+
+    // _duration
+
     /**
      * start decode when this method execute, if this method excute more than once, nothing will happend.
      * 
@@ -42,9 +46,13 @@ export class WavDecoder {
 
         this._dataBufferRangeList = [];
 
-        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide } = this._getWavInfo(firstPiceArrayBuffer);
+        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide, byteSpeed, duration } = this._getWavInfo(firstPiceArrayBuffer);
 
-        this._perDataBufferPiceLength = 1 * sampleRate;
+        this._perDataBufferPiceLength = 1 * sampleRate * numOfChannels * bitWide/8;
+
+        this._byteSpeed = byteSpeed;
+
+        this._duration = duration;
 
         this._audioContext = new OfflineAudioContext(numOfChannels, this._perDataBufferPiceLength, sampleRate);
 
@@ -80,13 +88,38 @@ export class WavDecoder {
     }
 
     abort() {
+        this._release();
+        this.onabort();
+    }
+
+    _release(){
+
+        this._dataBufferCache = null;
+        this._dataBufferRangeList = null;
+
+
+        this._perDataBufferPiceLength = null;
+
+        this._byteSpeed = 0;
+
+        this._duration = 0;
+
+        this._audioContext = null;
+
+        this._totalDataBufferLength = 0;
+
+        this._headerBuffer = null;
+        this._decodedDataByteLength = 0;
+        this._lastCacheIndex = 0;
+
+        this._cachedDataByteLength = 0;
+
+        this._cacheOffset = 0;
         this._decodeBufferPice = () => { }
         this.appendBuffer = () => { }
         this.onprocess = () => { }
         this.onwaitting = () => { }
-        this._dataBufferCache = null;
-        this._dataBufferRangeList = null;
-        this.onabort();
+
     }
 
     _cacheDataBufferList(bufferPiece) {
@@ -163,23 +196,25 @@ export class WavDecoder {
             // audio.controls = true;
             // audio.src = URL.createObjectURL(new File([audioData], 'audio.wav',{type: 'audo/wav'}));
             // document.body.appendChild(audio);
-            this._audioContext.decodeAudioData(audioData, data => {
-                const rangeStart = this._decodedDataByteLength;
+            this._audioContext.decodeAudioData(audioData, audioBuffer => {
+                const startTime = this._decodedDataByteLength/this._byteSpeed;
                 this._decodedDataByteLength += dataRange.length;
-
-                if (this._decodedDataByteLength >= this._totalDataBufferLength) {
-                    this._dataBufferCache = null;
-                    this.oncomplete();
-
-                } else {
+                const isComplete = this._decodedDataByteLength >= this._totalDataBufferLength;
+                
+                if(!isComplete){
                     this._decodeBufferPice();
                 }
                 this.onprocess({
-                    data,
-                    rangeStart,
-                    rangeEnd: this._decodedDataByteLength,
-                    total: this._totalDataBufferLength,
+                    audioBuffer,
+                    startTime,
+                    endTime: this._decodedDataByteLength/this._byteSpeed,
+                    duration: this._duration,
                 });
+                if (isComplete) {
+                    this._dataBufferCache = null;
+                    this.oncomplete();
+                    this._release();
+                }
 
             }, this.onerror);
         } else {
@@ -236,6 +271,7 @@ export class WavDecoder {
         const numOfChannels = view.getUint16(22, true);
         const bitWide = view.getUint16(34, true);
         const sampleRate = view.getUint32(24, true);
+        const byteSpeed = view.getUint32( 28, true);
         const headBuffer = buffer.slice(0, this._dataLengthOffset + 4);
         const dataBuffer = buffer.slice(this._dataLengthOffset + 4, this._dataLengthOffset + 4 + totalDataByteLength);
         return {
@@ -245,6 +281,8 @@ export class WavDecoder {
             headBuffer,
             dataBuffer,
             totalDataByteLength,
+            byteSpeed,
+            duration: totalDataByteLength/byteSpeed,
         };
     }
 

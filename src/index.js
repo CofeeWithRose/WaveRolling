@@ -63,8 +63,9 @@ export class WaveVisual {
         
         this._render.clear();
         this._render.reset();
-        this._decoder.onprocess = data => {
-            this._render.render( data.data, data.rangeStart/data.total,  data.rangeEnd/data.total );
+        this._decoder.onprocess = info => {
+            const {   audioBuffer, startTime, endTime, duration } = info;
+            this._render.render( audioBuffer, startTime/duration,  endTime/duration );
         }
         this._decoder.onerror = this.onerror;
         if(audioUrl instanceof ArrayBuffer){
