@@ -200,7 +200,6 @@ export class WavDecoder {
                 const startTime = this._decodedDataByteLength/this._byteSpeed;
                 this._decodedDataByteLength += dataRange.length;
                 const isComplete = this._decodedDataByteLength >= this._totalDataBufferLength;
-                
                 if(!isComplete){
                     this._decodeBufferPice();
                 }
