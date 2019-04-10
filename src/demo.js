@@ -24,7 +24,7 @@ WaveVisual.use({DataTransformer});
 /**
  * instance wa
  */
-const waveVisual = new WaveVisual(document.querySelector('#container'),{ color: '#37f5e3'});
+const waveVisual = new WaveVisual(document.querySelector('#container'),{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']});
 
 window.onSelect = function onSelect(event){
 
@@ -43,8 +43,8 @@ window.onSelect = function onSelect(event){
 
 
 window.onLoadAudio = function onLoadAudio(){
-    const data = {param1:1,param2:2}
-    waveVisual.load(`./source/${document.querySelector('#input').value}.wav`, {data});
+    const data = {pam2:1, pam2:2};
+    waveVisual.load(`source/${document.querySelector('#input').value}.wav`, {data});
 }
 
 

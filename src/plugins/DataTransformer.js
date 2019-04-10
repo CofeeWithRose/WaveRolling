@@ -2,7 +2,8 @@ import {stringify} from 'qs'
 
 export function DataTransformer(url, data, method){
     url = url || '';
-    if( !method ||'GET' === method ){
+    method = method || 'GET';
+    if( 'GET' === method ){
         data = data instanceof FormData? null:  stringify(data);
         url = `${url}?${data}`;
         data = null;
@@ -11,6 +12,7 @@ export function DataTransformer(url, data, method){
     }
     return { 
         url, 
-        fetchOptions: { body: data } 
+        // fetchOptions: { body: data } 
+        fetchOptions: { } 
     };
 }
