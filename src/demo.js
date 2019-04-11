@@ -43,7 +43,7 @@ window.onSelect = function onSelect(event){
 
 
 window.onLoadAudio = function onLoadAudio(){
-    const data = {pam2:1, pam2:2};
+    const data = {param1:1, param:2};
     waveVisual.load(`source/${document.querySelector('#input').value}.wav`, {data});
 }
 
