@@ -1,14 +1,14 @@
 {
-  "name": "wave",
+  "name": "@ths/waverolling",
   "version": "1.0.0",
-  "description": "",
+  "description": "show large(more than 1G) wav audio in canvas",
   "main": "./src/WaveVisual.js",
   "scripts": {
     "build": " webpack",
     "start": "webpack && node ./build/serve.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "CofeeWithRose",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.4.3",
@@ -25,5 +25,17 @@
   },
   "dependencies": {
     "babel-preset-env": "^1.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CofeeWithRose/LargePCMVisual.git"
+  },
+  "keywords": [
+    "auido",
+    "wav"
+  ],
+  "bugs": {
+    "url": "https://github.com/CofeeWithRose/LargePCMVisual/issues"
+  },
+  "homepage": "https://github.com/CofeeWithRose/LargePCMVisual#readme"
 }
