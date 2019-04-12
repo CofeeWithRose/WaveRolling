@@ -265,8 +265,8 @@ export class WavDecoder {
         const view = new DataView(buffer);
         const RIFF = this._getString(view, 0, 4);
         const WAVE = this._getString(view, 8, 4);
-        const encodeType = view.getUint16(20, true);
-        if ('RIFF' !== RIFF || 'WAVE' !== WAVE || 1 !== encodeType) {
+        // const encodeType = view.getUint16(20, true);
+        if ('RIFF' !== RIFF || 'WAVE' !== WAVE ) {
             this.onerror(new Error('Format Error.'));
             throw 'Format Error';
         }
