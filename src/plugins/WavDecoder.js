@@ -54,7 +54,12 @@ export class WavDecoder {
 
         this._duration = duration;
 
-        this._audioContext = new OfflineAudioContext(numOfChannels, this._perDataBufferPiceLength, sampleRate);
+	let OfflineAudioContext = window.OfflineAudioContext||window.webkitOfflineAudioContext;
+	if(!OfflineAudioContext){
+	    this.onerror('Not Suport Error');
+	    throw 'Not Suport Error';
+	}
+        this._audioContext = new OfflineAudioContext(numOfChannels, this._perDataBufferPiceLength, 44100);
 
         this._totalDataBufferLength = totalDataByteLength;
 
