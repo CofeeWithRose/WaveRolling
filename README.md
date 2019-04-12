@@ -10,7 +10,7 @@ it only support wav format encoded PCM audio.
 
 ## 浏览器支持 Browser and encode support.
 
- 由于基于 fetch\offlineAudioContext\ArrayBuffer\DatatView Api 只能在现代浏览器上使用,仅支持wav格式，由于firefox解码实现限制，仅支持8/16位的音频（12/32位在乎沪上将解码失败），.
+ 由于基于 fetch\offlineAudioContext\ArrayBuffer\DatatView Api 只能在现代浏览器上使用,仅支持wav格式，由于firefox解码实现限制，仅支持8/16位的音频（12/32位音频将解码失败），.
  
  It only suport standard wav audio file (firefox only suport 8/16 bitwide, 12/32 is not suport decode);
  
