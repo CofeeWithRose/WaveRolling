@@ -1,5 +1,5 @@
 {
-  "name": "@ths/waverolling",
+  "name": "wave-rolling",
   "version": "1.0.0",
   "description": "show large(more than 1G) wav audio in canvas",
   "main": "./src/WaveVisual.js",

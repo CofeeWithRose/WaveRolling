@@ -28,8 +28,8 @@ module.exports = {
     },
     
     plugins: [
+        // new CopyWebpackPlugin( [ {from: './src/source/**/*.png' , to: './source/**/*'}]),
         new webpack.SourceMapDevToolPlugin({  filename: '[name].js.map', }),
         new HtmlWebpackPlugin({template: './src/index.html'}),
-        // new CopyWebpackPlugin( [ {from: './src/source/**/*' , to: './source/**/*'}]),
       ]
 };
