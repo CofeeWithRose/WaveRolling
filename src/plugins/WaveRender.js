@@ -1,11 +1,21 @@
 
 
+/**
+ * @class  Options
+ *  
+ * 
+ * 
+ */
+
+/**
+ * create canvas and rend the data of audo on it.
+ */
 export class WaveRender {
  
     /**
      * initial the canvas.
      * @param { HTMLElement } container 
-     * @param { { color: Color | Array<Color>, scalable } } options 
+     * @param { { color: Color | Array<Color>| Array<Offset: number, value: Color >, Definition: 1 | 2 } } options 
      */
     constructor(container, options ){
         const { color } = options ||{};
@@ -13,7 +23,6 @@ export class WaveRender {
         this._canvas = document.createElement('canvas');
         this._context = this._canvas.getContext('2d');
         this._canvas.width = devicePixelRatio * Math.max (window.screen.width, window.screen.height); 
-        // this._canvas.width = 130080zzz
         this._canvas.style.width = '100%';
         this._canvas.style.height = '100%';
         this._canvas.height = container.clientHeight;
@@ -46,12 +55,12 @@ export class WaveRender {
     }
     reset(){
         this._setColor();
-        this._context.beginPath();
-        this._context.strokeStyle = this._color;
-        this._context.lineWidth = 2;
-        this._context.moveTo(0, this._halfHeight);
-        this._context.lineTo(this._canvas.width, this._halfHeight);
-        this._context.stroke()
+        // this._context.beginPath();
+        // this._context.strokeStyle = this._color;
+        // this._context.lineWidth = 1;
+        // this._context.moveTo(0, this._halfHeight);
+        // this._context.lineTo(this._canvas.width, this._halfHeight);
+        // this._context.stroke()
         // this._context.beginPath();
         // this._context.lineWidth = 1;
         // this._context.moveTo(0, this._halfHeight);
@@ -76,31 +85,32 @@ export class WaveRender {
 
     render(audioBuffer, startPercent, endPercent){
         
-        const floatArrayData = audioBuffer.getChannelData(0);
-        if(!this._isReset){
-            this._canvas.width = Math.min(30766,floatArrayData.length * 1/(endPercent - startPercent));
-            this._context = this._canvas.getContext('2d');
-            this.reset();
-            this._isReset = true;
-        }
+        let floatArrayData = audioBuffer.getChannelData(0);
+        floatArrayData = floatArrayData.map( val => Math.abs(val));
+        // if(!this._isReset){
+        //     this._canvas.width = Math.min(30766,floatArrayData.length * 1/(endPercent - startPercent));
+        //     this._context = this._canvas.getContext('2d');
+        //     this.reset();
+        //     this._isReset = true;
+        // }
         const startX = Math.floor(this._canvas.width * startPercent);
         const endX = Math.ceil(this._canvas.width * endPercent);
-        const stepnum = Math.max (Math.floor( 2 * (endX - startX) ) , 1);
-        const stepIndex = Math.max( Math.floor(floatArrayData.length/stepnum), 1);
-        const stepX = ( endX - startX )/ stepnum;
+        const width = (endX - startX)||10;
+        const yIndexStep = Math.floor(floatArrayData.length/ width)||1;
         this._context.beginPath();
         this._context.strokeStyle = this._color;
-
-        for(let i = 0; i < stepnum; i++){
-            const sample = [];
-            for( let j=0; j< stepIndex; j++ ){
-                sample.push(Math.abs(floatArrayData[j + i]));
-            }
-            const x = startX+ stepX*i;
-            const y = sample.reduce( (pre, cur) => pre + cur)/sample.length;
-            this._context.lineTo( x,  this._halfHeight +  this._halfHeight *  +  y * (i%2 *2 -1) );
+        this._context.lineWidth = 1;
+        for(let i = 0; i <= width; i++){
+            const x = startX + i;
+            const yIndex = Math.floor(yIndexStep * i);
+            const dtY =  this._halfHeight * floatArrayData[yIndex];
+            this._context.moveTo(x, this._halfHeight);
+            this._context.lineTo( x,  this._halfHeight + dtY);
+            this._context.moveTo(x, this._halfHeight);
+            this._context.lineTo( x,  this._halfHeight - dtY);
         }
         this._context.stroke();
+        
     }
 
     clear(){

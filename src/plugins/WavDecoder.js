@@ -59,7 +59,7 @@ export class WavDecoder {
 	    this.onerror('Not Suport Error');
 	    throw 'Not Suport Error';
 	}
-        this._audioContext = new OfflineAudioContext(numOfChannels, this._perDataBufferPiceLength, 44100);
+        this._audioContext = new OfflineAudioContext(1, this._perDataBufferPiceLength, 44100);
 
         this._totalDataBufferLength = totalDataByteLength;
 

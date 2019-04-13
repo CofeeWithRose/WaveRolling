@@ -1,4 +1,4 @@
-import { WaveVisual } from './index.js';
+import {  WaveRolling } from './index.js';
 import qs from 'qs'
 
 export function DataTransformer(url, data, method){
@@ -17,26 +17,26 @@ export function DataTransformer(url, data, method){
 }
 
 // use Plugin to tanslate data, it will effect the action  WaveVisual.
-WaveVisual.use({DataTransformer});
+WaveRolling.use({DataTransformer});
 
 
 
 /**
  * instance wa
  */
-const waveVisual = new WaveVisual(document.querySelector('#container'),{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']});
+const waveRolling = new WaveRolling(document.querySelector('#container'),{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']});
 
 window.onSelect = function onSelect(event){
 
     if(!event.target.files[0]) return;
-    if(waveVisual){
-        waveVisual.abort()
+    if(waveRolling){
+        waveRolling.abort()
     }
     const reader = new FileReader();
     
-    waveVisual.onabort = () => reader.abort();
+    waveRolling.onabort = () => reader.abort();
 
-    reader.onload = () => waveVisual.load(reader.result);
+    reader.onload = () => waveRolling.load(reader.result);
 
     reader.readAsArrayBuffer(event.target.files[0]);
 }
@@ -44,7 +44,7 @@ window.onSelect = function onSelect(event){
 
 window.onLoadAudio = function onLoadAudio(){
     const data = {param1:1, param:2};
-    waveVisual.load(`source/${document.querySelector('#input').value}.wav`, {data});
+    waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
 }
 
 

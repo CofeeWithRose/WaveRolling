@@ -8,7 +8,7 @@ let PLUGINS = {
     DataTransformer,
 }
 
-export class WaveVisual {
+export class WaveRolling {
     
     /**
      * @param { HTMLElement } containner 
