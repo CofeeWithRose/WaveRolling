@@ -4,9 +4,10 @@
   "description": "show large(more than 1G) wav audio in canvas",
   "main": "./release/index.js",
   "scripts": {
-    "dev": "./node_modules/.bin/webpack --mode development",
+    "build_dev": "./node_modules/.bin/webpack --mode development --watch",
+    "dev": "npm run build && npm run build_dev",
     "build": "./node_modules/.bin/webpack --mode=production",
-    "start": "npm run dev && node ./build/serve.js",
+    "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "CofeeWithRose",
