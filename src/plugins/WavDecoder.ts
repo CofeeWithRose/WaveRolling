@@ -26,35 +26,35 @@ export class WavDecoder {
     /**
      * the decoded data byte length of input ArrayBuffer.
      */
-    _decodedDataByteLength: number;
+    private decodedDataByteLength: number;
 
-    _audioContext: OfflineAudioContext;
+    private audioContext: OfflineAudioContext;
 
-    _headerBuffer: ArrayBuffer;
-
-
-    _perDataBufferPiceLength: number;
+    private headerBuffer: ArrayBuffer;
 
 
-    _dataBufferCache: Array<ArrayBuffer>;
+    private perDataBufferPiceLength: number;
 
-    _dataBufferRangeList: Array<DataBufferRange>;
 
-    _cachedDataByteLength: number;
+    private dataBufferCache: Array<ArrayBuffer>;
 
-    _totalDataBufferLength: number;
+    private dataBufferRangeList: Array<DataBufferRange>;
 
-    _tempBufferRange: DataBufferRange;
+    private cachedDataByteLength: number;
 
-    _lastCacheIndex: number;
+    private totalDataBufferLength: number;
 
-    _cacheOffset: number;
+    private tempBufferRange: DataBufferRange;
 
-    _byteSpeed: number;
+    private lastCacheIndex: number;
 
-    _duration: number;
+    private cacheOffset: number;
 
-    _dataLengthOffset: number;
+    private byteSpeed: number;
+
+    private duration: number;
+
+    private dataLengthOffset: number;
 
     /**
      * start decode when this method execute, if this method excute more than once, nothing will happend.
@@ -64,37 +64,37 @@ export class WavDecoder {
      */
     decode(firstPiceArrayBuffer: ArrayBuffer) {
 
-        this._dataBufferCache = [];
+        this.dataBufferCache = [];
 
-        this._dataBufferRangeList = [];
+        this.dataBufferRangeList = [];
 
-        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide, byteSpeed, duration } = this._getWavInfo(firstPiceArrayBuffer);
+        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide, byteSpeed, duration } = this.getWavInfo(firstPiceArrayBuffer);
 
-        this._perDataBufferPiceLength = 1 * sampleRate * numOfChannels * bitWide/8;
+        this.perDataBufferPiceLength = 1 * sampleRate * numOfChannels * bitWide/8;
 
-        this._byteSpeed = byteSpeed;
+        this.byteSpeed = byteSpeed;
 
-        this._duration = duration;
+        this.duration = duration;
 
 	let OfflineAudioContext = (<any>window).OfflineAudioContext||(<any>window).webkitOfflineAudioContext;
 	if(!OfflineAudioContext){
 	    this.onerror(new Error('Not Suport Error'));
 	    throw 'Not Suport Error';
 	}
-        this._audioContext = new OfflineAudioContext(1, this._perDataBufferPiceLength, 44100);
+        this.audioContext = new OfflineAudioContext(1, this.perDataBufferPiceLength, 44100);
 
-        this._totalDataBufferLength = totalDataByteLength;
+        this.totalDataBufferLength = totalDataByteLength;
 
-        this._headerBuffer = headBuffer;
-        this._decodedDataByteLength = 0;
-        this._lastCacheIndex = 0;
+        this.headerBuffer = headBuffer;
+        this.decodedDataByteLength = 0;
+        this.lastCacheIndex = 0;
 
-        this._cachedDataByteLength = 0;
+        this.cachedDataByteLength = 0;
 
-        this._cacheOffset = 0;
+        this.cacheOffset = 0;
 
-        this._cacheDataBufferList(dataBuffer);
-        this._decodeBufferPice();
+        this.cacheDataBufferList(dataBuffer);
+        this.decodeBufferPice();
         this.decode = () => { };
 
     }
@@ -106,140 +106,140 @@ export class WavDecoder {
     * when you append extra data, it will be iignore.
     */
     appendBuffer(buffer: ArrayBuffer) {
-        const isCacheComplete = this._cachedDataByteLength >= this._totalDataBufferLength;
-        const isWaitting = !this._dataBufferRangeList.length;
-        this._cacheDataBufferList(buffer);
+        const isCacheComplete = this.cachedDataByteLength >= this.totalDataBufferLength;
+        const isWaitting = !this.dataBufferRangeList.length;
+        this.cacheDataBufferList(buffer);
         if (!isCacheComplete && isWaitting) {
-            this._decodeBufferPice();
+            this.decodeBufferPice();
         }
     }
 
     abort() {
-        this._release();
+        this.release();
         this.onabort();
     }
 
-    _release(){
+    private release(){
 
-        this._dataBufferCache = null;
-        this._dataBufferRangeList = null;
+        this.dataBufferCache = null;
+        this.dataBufferRangeList = null;
 
 
-        this._perDataBufferPiceLength = null;
+        this.perDataBufferPiceLength = null;
 
-        this._byteSpeed = 0;
+        this.byteSpeed = 0;
 
-        this._duration = 0;
+        this.duration = 0;
 
-        this._audioContext = null;
+        this.audioContext = null;
 
-        this._totalDataBufferLength = 0;
+        this.totalDataBufferLength = 0;
 
-        this._headerBuffer = null;
-        this._decodedDataByteLength = 0;
-        this._lastCacheIndex = 0;
+        this.headerBuffer = null;
+        this.decodedDataByteLength = 0;
+        this.lastCacheIndex = 0;
 
-        this._cachedDataByteLength = 0;
+        this.cachedDataByteLength = 0;
 
-        this._cacheOffset = 0;
-        this._decodeBufferPice = () => { }
+        this.cacheOffset = 0;
+        this.decodeBufferPice = () => { }
         this.appendBuffer = () => { }
         this.onprocess = () => { }
         this.onwaitting = () => { }
 
     }
 
-    _cacheDataBufferList(bufferPiece: ArrayBuffer) {
+    private cacheDataBufferList(bufferPiece: ArrayBuffer) {
 
 
-        this._dataBufferCache.push(bufferPiece);
+        this.dataBufferCache.push(bufferPiece);
 
-        const cacheIndex = this._dataBufferCache.length - 1;
+        const cacheIndex = this.dataBufferCache.length - 1;
 
         let offset = 0;
 
-        if (this._tempBufferRange) {
+        if (this.tempBufferRange) {
 
-            const maxLength = this._totalDataBufferLength - this._cachedDataByteLength;
-            let needLength = this._perDataBufferPiceLength - this._tempBufferRange.length;
+            const maxLength = this.totalDataBufferLength - this.cachedDataByteLength;
+            let needLength = this.perDataBufferPiceLength - this.tempBufferRange.length;
             needLength = needLength <= maxLength ? needLength : maxLength;
             if (bufferPiece.byteLength >= needLength) {
-                this._tempBufferRange.segments.push({ cacheIndex, offset, length: needLength, cacheOffset: this._cacheOffset })
-                this._tempBufferRange.length += needLength;
-                this._cachedDataByteLength += needLength;
+                this.tempBufferRange.segments.push({ cacheIndex, offset, length: needLength, cacheOffset: this.cacheOffset })
+                this.tempBufferRange.length += needLength;
+                this.cachedDataByteLength += needLength;
                 offset += needLength;
-                this._dataBufferRangeList.push(this._tempBufferRange);
+                this.dataBufferRangeList.push(this.tempBufferRange);
 
-                this._tempBufferRange = null;
+                this.tempBufferRange = null;
             } else {
-                this._tempBufferRange.segments.push({ cacheIndex, offset, length: bufferPiece.byteLength, cacheOffset: this._cacheOffset });
-                this._tempBufferRange.length += bufferPiece.byteLength;
-                this._cachedDataByteLength += bufferPiece.byteLength;
+                this.tempBufferRange.segments.push({ cacheIndex, offset, length: bufferPiece.byteLength, cacheOffset: this.cacheOffset });
+                this.tempBufferRange.length += bufferPiece.byteLength;
+                this.cachedDataByteLength += bufferPiece.byteLength;
                 offset += bufferPiece.byteLength;
             }
 
         }
-        const segmentNumber = Math.floor((bufferPiece.byteLength - offset) / this._perDataBufferPiceLength);
+        const segmentNumber = Math.floor((bufferPiece.byteLength - offset) / this.perDataBufferPiceLength);
 
         for (let i = 0; i < segmentNumber; i++) {
 
-            this._dataBufferRangeList.push({
-                segments: [{ cacheIndex, offset, length: this._perDataBufferPiceLength, cacheOffset: this._cacheOffset }],
-                length: this._perDataBufferPiceLength,
+            this.dataBufferRangeList.push({
+                segments: [{ cacheIndex, offset, length: this.perDataBufferPiceLength, cacheOffset: this.cacheOffset }],
+                length: this.perDataBufferPiceLength,
             })
-            offset += this._perDataBufferPiceLength;
-            this._cachedDataByteLength += this._perDataBufferPiceLength;
+            offset += this.perDataBufferPiceLength;
+            this.cachedDataByteLength += this.perDataBufferPiceLength;
         }
 
         const restCacheLength = bufferPiece.byteLength - offset;
         if (restCacheLength) {
 
-            if (this._cachedDataByteLength + restCacheLength >= this._totalDataBufferLength) {
-                const length = this._totalDataBufferLength - this._cachedDataByteLength;
-                this._dataBufferRangeList.push({
-                    segments: [{ cacheIndex, offset, length, cacheOffset: this._cacheOffset }],
+            if (this.cachedDataByteLength + restCacheLength >= this.totalDataBufferLength) {
+                const length = this.totalDataBufferLength - this.cachedDataByteLength;
+                this.dataBufferRangeList.push({
+                    segments: [{ cacheIndex, offset, length, cacheOffset: this.cacheOffset }],
                     length,
                 });
-                this._cachedDataByteLength = this._totalDataBufferLength;
+                this.cachedDataByteLength = this.totalDataBufferLength;
             } else {
                 const length = bufferPiece.byteLength - offset;
-                this._tempBufferRange = {
-                    segments: [{ cacheIndex, offset, length, cacheOffset: this._cacheOffset }],
+                this.tempBufferRange = {
+                    segments: [{ cacheIndex, offset, length, cacheOffset: this.cacheOffset }],
                     length,
                 }
-                this._cachedDataByteLength += length
+                this.cachedDataByteLength += length
             }
         }
 
     }
 
 
-    _decodeBufferPice() {
+    private decodeBufferPice() {
 
-        const dataRange = this._dataBufferRangeList.shift();
+        const dataRange = this.dataBufferRangeList.shift();
         if (dataRange) {
-            const audioData = this._getRangeAuidoBuffer(dataRange);
+            const audioData = this.getRangeAuidoBuffer(dataRange);
             // const audio = document.createElement('audio');
             // audio.controls = true;
             // audio.src = URL.createObjectURL(new File([audioData], 'audio.wav',{type: 'audo/wav'}));
             // document.body.appendChild(audio);
-            this._audioContext.decodeAudioData(audioData, audioBuffer => {
-                const startTime = this._decodedDataByteLength/this._byteSpeed;
-                this._decodedDataByteLength += dataRange.length;
-                const isComplete = this._decodedDataByteLength >= this._totalDataBufferLength;
+            this.audioContext.decodeAudioData(audioData, audioBuffer => {
+                const startTime = this.decodedDataByteLength/this.byteSpeed;
+                this.decodedDataByteLength += dataRange.length;
+                const isComplete = this.decodedDataByteLength >= this.totalDataBufferLength;
                 if(!isComplete){
-                    this._decodeBufferPice();
+                    this.decodeBufferPice();
                 }
                 this.onprocess({
                     audioBuffer,
                     startTime,
-                    endTime: this._decodedDataByteLength/this._byteSpeed,
-                    duration: this._duration,
+                    endTime: this.decodedDataByteLength/this.byteSpeed,
+                    duration: this.duration,
                 });
                 if (isComplete) {
-                    this._dataBufferCache = null;
+                    this.dataBufferCache = null;
                     this.oncomplete();
-                    this._release();
+                    this.release();
                 }
 
             }, this.onerror);
@@ -248,25 +248,25 @@ export class WavDecoder {
         }
     }
 
-    _getRangeAuidoBuffer({ segments, length: rangeLength }: DataBufferRange) {
-        const dataBuffer = new ArrayBuffer(this._headerBuffer.byteLength + rangeLength);
+    private getRangeAuidoBuffer({ segments, length: rangeLength }: DataBufferRange) {
+        const dataBuffer = new ArrayBuffer(this.headerBuffer.byteLength + rangeLength);
         const dataView = new Uint8Array(dataBuffer);
         let viewOffset = 0;
 
-        this._setWavHeadDataLength(rangeLength);
-        const headView = new Uint8Array(this._headerBuffer);
+        this.setWavHeadDataLength(rangeLength);
+        const headView = new Uint8Array(this.headerBuffer);
         dataView.set(headView);
-        viewOffset += this._headerBuffer.byteLength;
+        viewOffset += this.headerBuffer.byteLength;
 
         segments.forEach(({ cacheIndex, offset, length, cacheOffset }) => {
 
-            if (cacheIndex - cacheOffset != this._lastCacheIndex) {
-                this._dataBufferCache.shift();
-                this._cacheOffset--;
-                this._lastCacheIndex = cacheIndex - cacheOffset;
+            if (cacheIndex - cacheOffset != this.lastCacheIndex) {
+                this.dataBufferCache.shift();
+                this.cacheOffset--;
+                this.lastCacheIndex = cacheIndex - cacheOffset;
             }
-            const curCacheIndex = cacheIndex + this._cacheOffset - cacheOffset;
-            const buffer = this._dataBufferCache[curCacheIndex];
+            const curCacheIndex = cacheIndex + this.cacheOffset - cacheOffset;
+            const buffer = this.dataBufferCache[curCacheIndex];
             const view = new Uint8Array(buffer, offset, length);
             dataView.set(view, viewOffset);
             viewOffset += length
@@ -277,29 +277,29 @@ export class WavDecoder {
 
 
 
-    _setWavHeadDataLength(byteLength: number) {
-        const view = new DataView(this._headerBuffer);
-        view.setUint32(this._dataLengthOffset, byteLength, true);
+    private setWavHeadDataLength(byteLength: number) {
+        const view = new DataView(this.headerBuffer);
+        view.setUint32(this.dataLengthOffset, byteLength, true);
     }
 
-    _getWavInfo(buffer: ArrayBuffer) {
+    private getWavInfo(buffer: ArrayBuffer) {
 
         const view = new DataView(buffer);
-        const RIFF = this._getString(view, 0, 4);
-        const WAVE = this._getString(view, 8, 4);
+        const RIFF = this.getString(view, 0, 4);
+        const WAVE = this.getString(view, 8, 4);
         // const encodeType = view.getUint16(20, true);
         if ('RIFF' !== RIFF || 'WAVE' !== WAVE ) {
             this.onerror(new Error('Format Error.'));
             throw 'Format Error';
         }
-        this._dataLengthOffset = this._getDataOffset(view);
-        const totalDataByteLength = view.getUint32(this._dataLengthOffset, true);
+        this.dataLengthOffset = this.getDataOffset(view);
+        const totalDataByteLength = view.getUint32(this.dataLengthOffset, true);
         const numOfChannels = view.getUint16(22, true);
         const bitWide = view.getUint16(34, true);
         const sampleRate = view.getUint32(24, true);
         const byteSpeed = view.getUint32( 28, true);
-        const headBuffer = buffer.slice(0, this._dataLengthOffset + 4);
-        const dataBuffer = buffer.slice(this._dataLengthOffset + 4, this._dataLengthOffset + 4 + totalDataByteLength);
+        const headBuffer = buffer.slice(0, this.dataLengthOffset + 4);
+        const dataBuffer = buffer.slice(this.dataLengthOffset + 4, this.dataLengthOffset + 4 + totalDataByteLength);
         return {
             bitWide,
             sampleRate,
@@ -312,12 +312,12 @@ export class WavDecoder {
         };
     }
 
-    _getDataOffset(headView: DataView) {
+    private getDataOffset(headView: DataView) {
 
         let offset = 16 + 4 + headView.getUint32(16, true);
         let flag = '';
         while (true) {
-            flag = this._getString(headView, offset, 4);
+            flag = this.getString(headView, offset, 4);
             if ('data' === flag) {
                 return 4 + offset;
             } else {
@@ -326,7 +326,7 @@ export class WavDecoder {
         }
     }
 
-    _getString(dataview: DataView, offset: number, length: number) {
+    private getString(dataview: DataView, offset: number, length: number) {
         let str = '';
         for (let extraOffset = 0; extraOffset < length; extraOffset++) {
             str += String.fromCharCode(dataview.getUint8(offset + extraOffset));
