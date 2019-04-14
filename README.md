@@ -17,7 +17,7 @@ it only support wav format encoded PCM audio.
  because using fetch\offlineAudioContext\ArrayBuffer\DatatView Api, it is only support  modren browser.
  
 
-![demo](https://github.com/CofeeWithRose/WaveRolling/blob/master/src/source/waverolling.png?raw=true)
+![demo](https://github.com/CofeeWithRose/WaveRolling/blob/master/source/waverolling.png?raw=true)
 
 ## demo
 ---
