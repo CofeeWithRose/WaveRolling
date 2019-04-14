@@ -1,4 +1,4 @@
-import {  WaveRolling } from './index.js';
+import {  WaveRolling } from '../index';
 import qs from 'qs'
 
 export function DataTransformer(url, data, method){

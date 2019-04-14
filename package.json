@@ -1,11 +1,12 @@
 {
   "name": "wave-rolling",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "show large(more than 1G) wav audio in canvas",
-  "main": "./src/WaveVisual.js",
+  "main": "./release/index.js",
   "scripts": {
-    "build": " webpack",
-    "start": "webpack && node ./build/serve.js",
+    "dev": "./node_modules/.bin/webpack --mode development",
+    "build": "./node_modules/.bin/webpack --mode=production",
+    "start": "npm run dev && node ./build/serve.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "CofeeWithRose",
