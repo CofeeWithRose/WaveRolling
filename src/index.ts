@@ -1,6 +1,7 @@
-import { WavDecoder } from './plugins/WavDecoder';
-import { WaveRender, WaveRenderOptions } from './plugins/WaveRender';
-import { DataTransformer } from './plugins/DataTransformer';
+import { DataTransformer } from './plugins/implement/DataTransformer';
+import { WaveRenderOptions } from './plugins/interface/IWaveRender';
+import { WavDecoder } from './plugins/implement/WavDecoder';
+import { WaveRender } from './plugins/implement/WaveRender';
 
 let PLUGINS = {
 
@@ -30,16 +31,18 @@ export interface WaveRollingPlugins {
 }
 
 export class WaveRolling {
-    
 
     constructor(containner: HTMLElement, options: WaveRollingOptions){
         this.plugins = { ...PLUGINS };
         const { color } = options || { color: 'black' };
-        this.render = new this.plugins.Render( containner, { color } );
+        this.render = new this.plugins.Render();
+        this.render.init( containner, { color } );
     }
 
     plugins: WaveRollingPlugins;
+
     render: WaveRender;
+    
     decoder: WavDecoder;
 
     /**
@@ -48,6 +51,7 @@ export class WaveRolling {
      * @param { { Decorder?, Render?, DataTransformer? } } plugins. 
      */
     static use(plugins: WaveRollingPlugins){
+        
         const plugsKeys = Object.keys(plugins||{});
         const extraPluginKeys = plugsKeys.filter( name => !(<any>PLUGINS)[name]);
         if(extraPluginKeys.length){

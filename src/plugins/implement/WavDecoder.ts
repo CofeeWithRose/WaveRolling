@@ -1,27 +1,12 @@
-
-export interface RangeSegment{
-    cacheIndex: number;
-    offset: number;
-    length: number;
-    cacheOffset: number;
-}
-export interface DataBufferRange{
-    length: number;
-    segments: Array<RangeSegment>;
-}
-
-export interface DecodedInfo {
-        audioBuffer: AudioBuffer,
-        startTime: number,
-        endTime: number,
-        duration: number,
-}
+import { DataBufferRange, DecodedInfo, IWavDecoder } from "../interface/IWavDecoder";
 
 
 /**
 * An audio progresive decoder, only surport wav format in pacm encoding.
 */
-export class WavDecoder {
+export class WavDecoder implements IWavDecoder {
+
+    constructor(){}
 
     /**
      * the decoded data byte length of input ArrayBuffer.

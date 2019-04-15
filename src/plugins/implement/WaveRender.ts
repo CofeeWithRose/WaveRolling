@@ -1,21 +1,17 @@
+import { WaveRenderOptions, IWaveRender } from "../interface/IWaveRender";
 
-export interface WaveRenderOptions{
-
-    color?: string|Array<string>|Array<string|{offset: number, value: string }>;
-    
-}
 
 /**
  * create canvas and rend the data of audo on it.
  */
-export class WaveRender {
+export class WaveRender implements IWaveRender {
  
     /**
      * initial the canvas.
      * @param { HTMLElement } container 
      * @param { { color: Color | Array<Color>| Array<offset: number, value: Color >, Definition: 1 | 2 } } options 
      */
-    constructor(container: HTMLElement, options?: WaveRenderOptions){
+    init(container: HTMLElement, options?: WaveRenderOptions){
         const { color: optionColor } = options || { color: 'black' };
        
         this.canvas = document.createElement('canvas');
@@ -38,7 +34,7 @@ export class WaveRender {
         let result: CanvasGradient | string;
         if(this.color instanceof Array){
             result = this.context.createLinearGradient(0, this.halfHeight,this.canvas.width, this.halfHeight);
-            this.color.forEach( ( item: string| {offset: number, value: string }, index: number ) => {
+            (<Array<{offset: number, value: string }|string>>this.color).forEach( ( item: string| {offset: number, value: string }, index: number ) => {
                 if('string' === typeof item){
                     (<CanvasGradient>result).addColorStop(index/(this.color.length-1), item);
                 }else{
