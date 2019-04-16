@@ -1,4 +1,4 @@
-import {  WaveRolling } from '../index';
+import {  WaveRolling } from '../main/implement/WaveRolling';
 // import qs from 'qs'
 
 // export function DataTransformer(url, data, method){
@@ -24,8 +24,7 @@ import {  WaveRolling } from '../index';
 /**
  * instance wa
  */
-const waveRolling = new WaveRolling(document.querySelector('#container'),{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']});
-
+const waveRolling = WaveRolling.create(document.querySelector('#container'),{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']});
 (<any>window).onSelect = function onSelect(event: Event){
 
     if(!(<any>event.target).files[0]) return;
