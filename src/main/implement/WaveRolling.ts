@@ -10,7 +10,7 @@ export class WaveRolling extends AWaveRolling{
         super();
     }
 
-    static create(containner: HTMLElement, options: WaveRollingOptions){
+    static create(containner: HTMLElement, options?: WaveRollingOptions){
         const waveRolling = new this()
         waveRolling.init(containner, options);
         return waveRolling;

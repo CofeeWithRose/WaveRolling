@@ -33,13 +33,13 @@ export interface WaveRollingLoadOptions {
 
 export interface WaveRollingPlugins {
 
-    Decorder: new  ()=>  IWavDecoder;
+    Decorder?: new  ()=>  IWavDecoder;
 
-    Render: new () => IWaveRender;
+    Render?: new () => IWaveRender;
 
-    HDRender: new () => IWaveRender;
+    HDRender?: new () => IWaveRender;
 
-    DataTransformer:   ( url: string, data: any, method: 'GET'|'POST'|'PUT'|'DELETE' ) => 
+    DataTransformer?:   ( url: string, data: any, method: 'GET'|'POST'|'PUT'|'DELETE' ) => 
                         { url: string, fetchOptions: RequestInit };
     
 }

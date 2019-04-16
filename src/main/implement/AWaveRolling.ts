@@ -58,10 +58,10 @@ export abstract class AWaveRolling {
 
 
 
-    protected init(containner: HTMLElement, options: WaveRollingOptions){
+    protected init(containner: HTMLElement, options?: WaveRollingOptions){
         this.plugins = { ...PLUGINS };
-        const { color } = options || { color: 'black' };
-        this.render = new this.plugins.Render();
+        const { color, scalable } = options||{ color: '', scalable: false };
+        this.render = scalable? new this.plugins.HDRender() : new this.plugins.Render();
         this.render.init( containner, { color } );
     }
 
