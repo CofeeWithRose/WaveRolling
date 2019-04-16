@@ -4,6 +4,7 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "declaration": true,
+        "declarationDir":"./release",
         "module": "commonjs",
         "target": "es5",
     },
