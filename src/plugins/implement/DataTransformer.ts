@@ -12,7 +12,6 @@ export function DataTransformer(url: string, data: any, method: 'GET'|'POST'|'PU
     }
     return { 
         url, 
-        // fetchOptions: { body: data } 
-        fetchOptions: { } 
+        fetchOptions: { body: data, method } 
     };
 }
