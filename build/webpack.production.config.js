@@ -4,7 +4,8 @@ module.exports = {
     entry: path.resolve(__dirname, '../src/index.ts'),
     output: {
         path: path.resolve(__dirname, '../release'),
-        filename: 'index.js'
+        filename: 'index.js',
+        libraryTarget: 'umd',
     },
     devtool: false,
 };
