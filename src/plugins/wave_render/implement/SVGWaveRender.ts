@@ -1,7 +1,7 @@
-import { IWaveRender, WaveRenderOptions } from "../interface/IWaveRender";
-import { stringify } from "qs";
+import { WaveRenderOptions } from "../interface/IWaveRender";
+import { AWaveRender } from "./AWaveRender";
 
-export class HDWaveRender implements IWaveRender{
+export class SVGWaveRender extends AWaveRender{
 
     private svg: SVGElement;
 
@@ -20,7 +20,7 @@ export class HDWaveRender implements IWaveRender{
     private color: string;
 
     init(container: HTMLElement, options?: WaveRenderOptions) {
-
+        document.addEventListener
         this.svg = document.createElementNS( "http://www.w3.org/2000/svg",'svg');
         this.svg.style.width = '100%';
         this.clientWidth = container.clientWidth;
@@ -41,12 +41,7 @@ export class HDWaveRender implements IWaveRender{
     }
 
     private setColor({ color } :  WaveRenderOptions ){
-        const a = new Array<string>();
-        a.map<String>((val, index) => {
-            return ''
-        })
-      
-        
+
         if(color instanceof Array){
             const linearGradientContent = color.map<string>( (item, index) => {
                 if( 'string' == typeof item){
@@ -55,7 +50,6 @@ export class HDWaveRender implements IWaveRender{
                     const { offset, value } = item;
                     return  `<stop offset="${100 * offset}%" style="stop-color:${value};stop-opacity:1"/>`;
                 }
-                
             }).join('\n');
             const colorDefine = 
                 `<linearGradient id="wave_rolling_color" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -72,18 +66,19 @@ export class HDWaveRender implements IWaveRender{
     }
 
     private draw(){
-        const polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
-        polyline.id = 'waverolling_line';
-        polyline.setAttribute('points', this.getPoints());
-        polyline.setAttribute('style',`stroke-width:${1/devicePixelRatio}; stroke: ${this.color};`);
 
-        // const polylineStr = `<polyline id="waverolling_line" points="${this.getPoints()}" style="stroke-width:${1/devicePixelRatio}; stroke: ${this.color};" ></polyline>`;
-        const oldLine = this.svg.querySelector('#waverolling_line');
-        if(oldLine){
-            this.svg.removeChild(oldLine);
+        let polyline = this.svg.querySelector('#waverolling_line');
+        if(!polyline){
+            polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+            polyline.id = 'waverolling_line';
+            polyline.setAttribute('style',`stroke-width:${1/devicePixelRatio}; stroke: ${this.color};`);
+            this.svg.appendChild(polyline);
         }
-        this.svg.appendChild(polyline);
+        polyline.setAttribute('points', this.getPoints());
+        
     }
+
+    
     reset(){
         this.scaleX = 1;
 

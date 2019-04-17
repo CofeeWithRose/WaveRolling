@@ -1,4 +1,4 @@
-import { DecodedInfo, IWavDecoder } from "../decoder/interface/IWavDecoder";
+import { DecodedInfo, IWavDecoder } from "../interface/IWavDecoder";
 /**
 * An audio progresive decoder, only surport wav format in pacm encoding.
 */

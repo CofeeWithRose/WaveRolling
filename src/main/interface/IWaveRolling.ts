@@ -1,9 +1,9 @@
-import { DataTransformer } from '../../plugins/implement/DataTransformer';
-import { WaveRenderOptions, IWaveRender } from '../../plugins/interface/IWaveRender';
-import { WavDecoder } from '../../plugins/implement/WavDecoder';
-import { WaveRender } from '../../plugins/implement/WaveRender';
-import { IWavDecoder } from '../../plugins/interface/IWavDecoder';
-import { HDWaveRender } from '../../plugins/implement/HDWaveRender';
+import { DataTransformer } from '../../plugins/data_transformer/DataTransformer';
+import { WaveRenderOptions, IWaveRender, IWaveRenderEvents } from '../../plugins/wave_render/interface/IWaveRender';
+import { WavDecoder } from '../../plugins/decoder/implement/WavDecoder';
+import { WaveRender } from '../../plugins/wave_render/implement/WaveRender';
+import { IWavDecoder } from '../../plugins/decoder/interface/IWavDecoder';
+import { SVGWaveRender } from '../../plugins/wave_render/implement/SVGWaveRender';
 
 let PLUGINS: WaveRollingPlugins = {
 
@@ -11,7 +11,7 @@ let PLUGINS: WaveRollingPlugins = {
     
     Render: WaveRender,
     
-    HDRender: HDWaveRender,
+    HDRender: SVGWaveRender,
 
     DataTransformer,
 
@@ -44,7 +44,15 @@ export interface WaveRollingPlugins {
     
 }
 
-export interface WaveRolling {
+export interface WaveRollingEvents extends IWaveRenderEvents {
+
+    error:  Error;
+
+    abort: null;
+
+}
+
+export interface IWaveRolling {
 
 
     /**
@@ -68,5 +76,11 @@ export interface WaveRolling {
     onerror(error: Error): void;
     
     onabort(): void;
+
+    addListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void ): void;
+
+    removeListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void): void;
+
+    trigger<N extends keyof WaveRollingEvents>(name: N,  info?: WaveRollingEvents[N]): void;
 
 }

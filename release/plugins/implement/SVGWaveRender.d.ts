@@ -1,6 +1,6 @@
 import { WaveRenderOptions } from "../interface/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
-export declare class HDWaveRender extends AWaveRender {
+export declare class SVGWaveRender extends AWaveRender {
     private svg;
     private scaleX;
     private scaleDelta;

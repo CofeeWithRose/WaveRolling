@@ -35,7 +35,10 @@ export class WaveRolling extends AWaveRolling{
             const {   audioBuffer, startTime, endTime, duration } = info;
             this.render.render( audioBuffer, startTime/duration,  endTime/duration );
         }
-        this.decoder.onerror = this.onerror;
+        this.decoder.onerror = (error: Error) => {
+            this.onerror(error);
+            this.trigger('error', error);
+        };
     
         const { data, method } = (options||{data: null, method: null});
         this.loadAudio(audioUrl, data, method);
@@ -45,6 +48,7 @@ export class WaveRolling extends AWaveRolling{
     loadBlob(arrayBuffer: ArrayBuffer){
 
         this.decoder.decode(arrayBuffer);
+
         this.append = arrayBuffer => {
             this.decoder.appendBuffer(arrayBuffer);
         }
@@ -55,13 +59,14 @@ export class WaveRolling extends AWaveRolling{
      * @param {ArrayBuffer} arrayBuffer 
      */
     append(arrayBuffer: ArrayBuffer){
-
+        
     }
 
     abort(){
         if(this.decoder){
             this.decoder.abort();
         }
+        this.trigger('abort');
         this.onabort();
     }
 
@@ -93,7 +98,6 @@ export class WaveRolling extends AWaveRolling{
                     const view = new Uint8Array(buffer);
                     view.set(data.value);
                     this.decoder.appendBuffer(buffer);
-                    
                 }
     
             }).catch(e => {

@@ -1,10 +1,11 @@
-import { WaveRenderOptions, IWaveRender } from "../interface/IWaveRender";
+import { WaveRenderOptions, IWaveRender, IWaveRenderEvents } from "../interface/IWaveRender";
+import { AWaveRender } from "./AWaveRender";
 
 
 /**
  * create canvas and rend the data of audo on it.
  */
-export class WaveRender implements IWaveRender {
+export class WaveRender extends AWaveRender {
  
     /**
      * initial the canvas.
@@ -111,6 +112,8 @@ export class WaveRender implements IWaveRender {
     clear(){
         this.context.clearRect( 0,0,this.canvas.width, this.canvas.height);
     }
+    
+    
 
 
 }
