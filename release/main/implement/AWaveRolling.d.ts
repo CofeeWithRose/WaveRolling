@@ -19,7 +19,7 @@ export declare abstract class AWaveRolling {
         Decorder?: new () => IWavDecoder;
         Render?: new () => IWaveRender;
         HDRender?: new () => IWaveRender;
-        DataTransformer?: (url: string, data: any, method: "GET" | "POST" | "PUT" | "DELETE") => {
+        DataTransformer?: (url: string, data: any, method: "GET" | "PUT" | "DELETE" | "POST") => {
             url: string;
             fetchOptions: RequestInit;
         };

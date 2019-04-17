@@ -1,4 +1,5 @@
 import { IWaveRender, WaveRenderOptions } from "../interface/IWaveRender";
+import { stringify } from "qs";
 
 export class HDWaveRender implements IWaveRender{
 
@@ -15,8 +16,8 @@ export class HDWaveRender implements IWaveRender{
     private halfHeight: number;
 
     private drawTimer: number;
-    
 
+    private color: string;
 
     init(container: HTMLElement, options?: WaveRenderOptions) {
 
@@ -25,22 +26,63 @@ export class HDWaveRender implements IWaveRender{
         this.clientWidth = container.clientWidth;
         this.svg.style.height = `${container.clientHeight}px`;
         this.halfHeight = 0.5 * container.clientHeight;
+        this.setColor(options||{});
         container.appendChild(this.svg);
         this.svg.addEventListener('wheel', this.onScroll);
     };
     
     private getPoints(){
         let result = '';
-        const detIndex = Math.floor(0.1/this.scaleX)||1;
-        for(let i = 0; i< this.pointArray.length && i * this.scaleX< this.clientWidth; i+=detIndex){
+        const detIndex = Math.floor(0.1/(this.scaleX*devicePixelRatio))||1;
+        for(let i = 0; i< this.pointArray.length && i * this.scaleX< this.clientWidth *devicePixelRatio; i+=detIndex){
             result +=`${i * this.scaleX},${this.pointArray[i]} `;
         }
         return result;
     }
 
+    private setColor({ color } :  WaveRenderOptions ){
+        const a = new Array<string>();
+        a.map<String>((val, index) => {
+            return ''
+        })
+      
+        
+        if(color instanceof Array){
+            const linearGradientContent = color.map<string>( (item, index) => {
+                if( 'string' == typeof item){
+                    return `<stop offset="${index*100/color.length-1}%" style="stop-color:${item};stop-opacity:1"/>`;
+                }else{
+                    const { offset, value } = item;
+                    return  `<stop offset="${100 * offset}%" style="stop-color:${value};stop-opacity:1"/>`;
+                }
+                
+            }).join('\n');
+            const colorDefine = 
+                `<linearGradient id="wave_rolling_color" x1="0%" y1="0%" x2="100%" y2="0%">
+                    ${linearGradientContent}
+                </linearGradient>`;
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            defs.innerHTML = colorDefine;
+            this.svg.appendChild(defs);
+            this.color = 'url(#wave_rolling_color)';
+        }else{
+            this.color = color;
+        }
+        
+    }
+
     private draw(){
-        const polylineStr = `<polyline points="${this.getPoints()}" style="stroke-width:1; stroke: red;" ></polyline>`;
-        this.svg.innerHTML = polylineStr;
+        const polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+        polyline.id = 'waverolling_line';
+        polyline.setAttribute('points', this.getPoints());
+        polyline.setAttribute('style',`stroke-width:${1/devicePixelRatio}; stroke: ${this.color};`);
+
+        // const polylineStr = `<polyline id="waverolling_line" points="${this.getPoints()}" style="stroke-width:${1/devicePixelRatio}; stroke: ${this.color};" ></polyline>`;
+        const oldLine = this.svg.querySelector('#waverolling_line');
+        if(oldLine){
+            this.svg.removeChild(oldLine);
+        }
+        this.svg.appendChild(polyline);
     }
     reset(){
         this.scaleX = 1;
@@ -48,7 +90,7 @@ export class HDWaveRender implements IWaveRender{
         this.scaleDelta = 1;
     
         this.pointArray = new Array<number>();
-        
+
         this.render = this.firstRender;
     };
 

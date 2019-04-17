@@ -1,7 +1,7 @@
 
 export interface WaveRenderOptions{
 
-    color?: string|Array<string>|Array<string|{offset: number, value: string }>;
+    color?: string|Array<string|{offset: number, value: string }>;
     
 }
 

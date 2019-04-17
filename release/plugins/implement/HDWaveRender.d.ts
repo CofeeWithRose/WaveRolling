@@ -7,8 +7,10 @@ export declare class HDWaveRender implements IWaveRender {
     private clientWidth;
     private halfHeight;
     private drawTimer;
+    private color;
     init(container: HTMLElement, options?: WaveRenderOptions): void;
     private getPoints;
+    private setColor;
     private draw;
     reset(): void;
     render(audioBuffer: AudioBuffer, startPercent: number, endPercent: number): void;
