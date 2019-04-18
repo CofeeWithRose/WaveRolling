@@ -1,12 +1,27 @@
-import { DataBufferRange, DecodedInfo, IWavDecoder } from "../interface/IWavDecoder";
+import { DataBufferRange, DecodedInfo, IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from "../interface/IWavDecoder";
+import { EventHandle } from "../../../main/implement/EventHandle";
 
 
 /**
 * An audio progresive decoder, only surport wav format in pacm encoding.
 */
-export class WavDecoder implements IWavDecoder {
+export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecoderEvents> implements IWavDecoder {
 
-    constructor(){}
+    constructor(){
+        super();
+
+        this.setTriggerProcesser('process', decodeInfo => decodeInfo);
+        this.setTriggerProcesser('waitting', () => {} );
+        this.setTriggerProcesser('complete', () => {} );
+        this.setTriggerProcesser('abort', () => {});
+        this.setTriggerProcesser( 'error', error =>　error );
+
+        this.addListener('process', info => this.onprocess(info));
+        this.addListener('waitting', () => this.onwaitting());
+        this.addListener('complete', () => this.oncomplete());
+        this.addListener('abort', () => this.onabort());
+        this.addListener('error', error => this.onerror(error));
+    }
 
     /**
      * the decoded data byte length of input ArrayBuffer.
@@ -101,7 +116,7 @@ export class WavDecoder implements IWavDecoder {
 
     abort() {
         this.release();
-        this.onabort();
+        this.trigger('abort');
     }
 
     private release(){
@@ -127,6 +142,7 @@ export class WavDecoder implements IWavDecoder {
         this.cachedDataByteLength = 0;
 
         this.cacheOffset = 0;
+        this.clearListener();
         this.decodeBufferPice = () => { }
         this.appendBuffer = () => { }
         this.onprocess = () => { }
@@ -215,7 +231,7 @@ export class WavDecoder implements IWavDecoder {
                 if(!isComplete){
                     this.decodeBufferPice();
                 }
-                this.onprocess({
+                this.trigger('process', {
                     audioBuffer,
                     startTime,
                     endTime: this.decodedDataByteLength/this.byteSpeed,
@@ -223,13 +239,13 @@ export class WavDecoder implements IWavDecoder {
                 });
                 if (isComplete) {
                     this.dataBufferCache = null;
-                    this.oncomplete();
+                    this.trigger('complete');
                     this.release();
                 }
 
-            }, this.onerror);
+            }, (error) =>this.trigger('error', error));
         } else {
-            this.onwaitting();
+            this.trigger('waitting');
         }
     }
 
@@ -274,7 +290,7 @@ export class WavDecoder implements IWavDecoder {
         const WAVE = this.getString(view, 8, 4);
         // const encodeType = view.getUint16(20, true);
         if ('RIFF' !== RIFF || 'WAVE' !== WAVE ) {
-            this.onerror(new Error('Format Error.'));
+            this.trigger('error', new Error('Format Error.'));
             throw 'Format Error';
         }
         this.dataLengthOffset = this.getDataOffset(view);

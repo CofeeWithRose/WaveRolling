@@ -1,3 +1,4 @@
+import { IEventHandle } from "../../../main/interface/IEventHandle";
 
 export interface RangeSegment{
     cacheIndex: number;
@@ -17,11 +18,49 @@ export interface DecodedInfo {
         duration: number,
 }
 
+/**
+ * 
+ * the events in decoder.
+ * 
+ * 解码器事件.
+ */
+export interface WaveDecoderEvents {
+    
+    error:  Error;
+
+    abort: void;
+
+    process: DecodedInfo;
+
+    waitting: void;
+
+    complete: void;
+    
+}
+
+/**
+ * triggerable events.
+ * 
+ * 可以触发的解码器事件.
+ */
+export interface WaveDecoderEventsTrigger {
+    
+    error:  Error;
+
+    abort: void;
+
+    process: DecodedInfo;
+
+    waitting: void;
+
+    complete: void;
+    
+}
 
 /**
 * An audio progresive decoder, only surport wav format in pacm encoding.
 */
-export interface IWavDecoder {
+export interface IWavDecoder extends IEventHandle<WaveDecoderEventsTrigger, WaveDecoderEvents> {
 
    
 

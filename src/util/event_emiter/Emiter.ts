@@ -6,12 +6,12 @@ export class Emiter implements IEmiter{
 
     protected eventMap: EventMap = {  };
 
-    addListener(name: string, fun: (...params: Array<any>) => void): void{
+    addListener(name: string|number, fun: (...params: Array<any>) => void): void{
         const funArray = this.eventMap[name] =this.eventMap[name] || [];
         funArray.push(fun);
     }
 
-    removeListener(name: string, fun: (...params: Array<any>) => void): void{
+    removeListener(name: string|number, fun: (...params: Array<any>) => void): void{
         const funArray = this.eventMap[name];
         if( funArray ){
             if( funArray.length ){

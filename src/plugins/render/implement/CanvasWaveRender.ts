@@ -1,4 +1,4 @@
-import { WaveRenderOptions, IWaveRender, IWaveRenderEvents } from "../interface/IWaveRender";
+import { WaveRenderOptions, IWaveRender, WaveRenderEvents } from "../interface/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
 
 

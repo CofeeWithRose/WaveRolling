@@ -1,12 +1,13 @@
-import { WaveRollingPlugins, WaveRollingOptions, IWaveRolling, WaveRollingEvents } from "../interface/IWaveRolling";
+import { WaveRollingPlugins, WaveRollingOptions, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger } from "../interface/IWaveRolling";
 import { WavDecoder } from "../../plugins/decoder/implement/WavDecoder";
-import { WaveRender } from "../../plugins/wave_render/implement/WaveRender";
-import { SVGWaveRender } from "../../plugins/wave_render/implement/SVGWaveRender";
+import { WaveRender } from "../../plugins/render/implement/CanvasWaveRender";
+import { SVGWaveRender } from "../../plugins/render/implement/SVGWaveRender";
 import { DataTransformer } from "../../plugins/data_transformer/DataTransformer";
-import { IWaveRender } from "../../plugins/wave_render/interface/IWaveRender";
+import { IWaveRender } from "../../plugins/render/interface/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interface/IWavDecoder";
 import { Emiter } from "../../util/event_emiter/Emiter";
 import { IEmiter } from "../../util/event_emiter/IEmiter";
+import { EventHandle } from "./EventHandle";
 
 let PLUGINS: WaveRollingPlugins = {
 
@@ -20,13 +21,17 @@ let PLUGINS: WaveRollingPlugins = {
 
 }
 
-export abstract class AWaveRolling implements IWaveRolling {
+export abstract class AWaveRolling extends EventHandle<WaveRollingEventsTrigger, WaveRollingEvents> implements IWaveRolling {
 
    protected constructor(){
-
+    super();
+    this.setTriggerProcesser('error', error => error );
+    this.setTriggerProcesser('abort', () => null );
+    // 图像未缩放.
+    this.setTriggerProcesser('click', ({viewPercent}) => ({totalPercent: viewPercent}));
+    this.setTriggerProcesser('wheel', ({viewPercent}) => ({totalPercent: viewPercent, startPercent: 0, endPercent: 1}));
    }
 
-   protected listeners: IEmiter = new Emiter();
 
     protected plugins: WaveRollingPlugins;
 
@@ -66,18 +71,6 @@ export abstract class AWaveRolling implements IWaveRolling {
         this.render = scalable? new this.plugins.HDRender() : new this.plugins.Render();
         this.render.init( containner, { color } );
     }
-
-    addListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void ): void{
-        this.listeners.addListener(name, callback);
-    }
-
-    removeListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void): void{
-        this.listeners.removeListener( name, callback);
-    };
-
-    trigger<N extends keyof WaveRollingEvents>(name: N,  info?: WaveRollingEvents[N]): void{
-        this.listeners.emit(name, info);
-    };
 
     abstract load(url: string): void;
 

@@ -1,9 +1,10 @@
 import { DataTransformer } from '../../plugins/data_transformer/DataTransformer';
-import { WaveRenderOptions, IWaveRender, IWaveRenderEvents } from '../../plugins/wave_render/interface/IWaveRender';
+import { WaveRenderOptions, IWaveRender, WaveRenderEvents, WaveRenderEventsTrigger } from '../../plugins/render/interface/IWaveRender';
 import { WavDecoder } from '../../plugins/decoder/implement/WavDecoder';
-import { WaveRender } from '../../plugins/wave_render/implement/WaveRender';
-import { IWavDecoder } from '../../plugins/decoder/interface/IWavDecoder';
-import { SVGWaveRender } from '../../plugins/wave_render/implement/SVGWaveRender';
+import { WaveRender } from '../../plugins/render/implement/CanvasWaveRender';
+import { IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from '../../plugins/decoder/interface/IWavDecoder';
+import { SVGWaveRender } from '../../plugins/render/implement/SVGWaveRender';
+import { IEventHandle } from './IEventHandle';
 
 let PLUGINS: WaveRollingPlugins = {
 
@@ -44,15 +45,11 @@ export interface WaveRollingPlugins {
     
 }
 
-export interface WaveRollingEvents extends IWaveRenderEvents {
+export type WaveRollingEvents =  WaveRenderEvents & WaveDecoderEvents;
 
-    error:  Error;
+export type WaveRollingEventsTrigger = WaveRenderEventsTrigger & WaveDecoderEventsTrigger;
 
-    abort: null;
-
-}
-
-export interface IWaveRolling {
+export interface IWaveRolling extends IEventHandle<WaveRollingEventsTrigger, WaveRollingEvents>{
 
 
     /**
@@ -76,11 +73,5 @@ export interface IWaveRolling {
     onerror(error: Error): void;
     
     onabort(): void;
-
-    addListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void ): void;
-
-    removeListener<N extends keyof WaveRollingEvents>( name: N, callback: ( info?: WaveRollingEvents[N]) => void): void;
-
-    trigger<N extends keyof WaveRollingEvents>(name: N,  info?: WaveRollingEvents[N]): void;
 
 }

@@ -1,8 +1,9 @@
-import { DecodedInfo, IWavDecoder } from "../interface/IWavDecoder";
+import { DecodedInfo, IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from "../interface/IWavDecoder";
+import { EventHandle } from "../../../main/implement/EventHandle";
 /**
 * An audio progresive decoder, only surport wav format in pacm encoding.
 */
-export declare class WavDecoder implements IWavDecoder {
+export declare class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecoderEvents> implements IWavDecoder {
     constructor();
     /**
      * the decoded data byte length of input ArrayBuffer.
