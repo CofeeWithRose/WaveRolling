@@ -1,4 +1,4 @@
-import {  WaveRolling } from '../';
+import {  WaveRolling } from '../index';
 import {stringify} from 'qs';
 
 export function DataTransformer(url:string, data: any, method: "GET" | "PUT" | "DELETE" | "POST"){
@@ -17,7 +17,7 @@ export function DataTransformer(url:string, data: any, method: "GET" | "PUT" | "
 }
 
 // use Plugin to tanslate data, it will effect the action  WaveVisual.
-WaveRolling.use({DataTransformer});
+// WaveRolling.use({DataTransformer});
 
 
 
@@ -49,7 +49,7 @@ const waveRolling = WaveRolling.create(
 
 
 (<any>window).onLoadAudio = function onLoadAudio(){
-    const data = {param1:1, param:2};
+    const data = {param1:['sad','asdda'], param:{asd:1, hjj:4, as:[1,2,3]}};
     waveRolling.load(`source/${(<HTMLInputElement>document.querySelector('#input')).value}.wav`, {data});
 };
 

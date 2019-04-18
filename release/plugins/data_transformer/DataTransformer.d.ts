@@ -2,6 +2,6 @@ export declare function DataTransformer(url: string, data: any, method: 'GET' | 
     url: string;
     fetchOptions: {
         body: any;
-        method: "GET" | "PUT" | "DELETE" | "POST";
+        method: "GET" | "POST" | "PUT" | "DELETE";
     };
 };
