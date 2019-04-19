@@ -1,6 +1,7 @@
 import { WaveRenderOptions } from "../interfaces/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
 export declare class SVGWaveRender extends AWaveRender {
+    constructor();
     private svg;
     private scaleX;
     private scaleDelta;
@@ -17,6 +18,8 @@ export declare class SVGWaveRender extends AWaveRender {
     render(audioBuffer: AudioBuffer, startPercent: number, endPercent: number): void;
     private firstRender;
     private afterRender;
-    private onScroll;
+    private wheelProcesser;
+    private getBoddyLeftOffset;
+    private onWheel;
     clear(): void;
 }

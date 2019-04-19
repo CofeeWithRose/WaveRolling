@@ -1,5 +1,6 @@
-import { IWaveRender, WaveRenderOptions, WaveRenderEvents, WaveRenderEventsTrigger } from "../interfaces/IWaveRender";
+import { IWaveRender, WaveRenderOptions} from "../interfaces/IWaveRender";
 import { EventHandle } from "../../../main/implements/EventHandle";
+import { WaveRenderEventsTrigger, WaveRenderEvents } from "../interfaces/IWaveRenderEvents";
 
 
 export abstract class AWaveRender extends EventHandle<WaveRenderEventsTrigger, WaveRenderEvents> implements IWaveRender{

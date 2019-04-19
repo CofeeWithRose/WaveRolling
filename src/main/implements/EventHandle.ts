@@ -1,6 +1,6 @@
 import { IEventHandle } from "../interfaces/IEventHandle";
-import { Emiter } from "../../util/event_emiter/Emiter";
-import { IEmiter } from "../../util/event_emiter/IEmiter";
+import { Emiter } from "../../util/event/Emiter";
+import { IEmiter } from "../../util/event/IEmiter";
 
 export class EventHandle<TriggersMap, EventsMap extends {[N in keyof TriggersMap]: EventsMap[N]}> implements IEventHandle<TriggersMap,EventsMap>{
 

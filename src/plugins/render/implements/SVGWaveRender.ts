@@ -1,7 +1,14 @@
 import { WaveRenderOptions } from "../interfaces/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
+import { WaveWheelEventTrigger, WaveWheelEvent } from "../interfaces/IWaveRenderEvents";
 
 export class SVGWaveRender extends AWaveRender{
+
+    constructor(){
+        super();
+        this.setTriggerProcesser('wheel', this.wheelProcesser);
+        this.addListener('wheel', this.onWheel);
+    }
 
     private svg: SVGElement;
 
@@ -28,7 +35,7 @@ export class SVGWaveRender extends AWaveRender{
         this.halfHeight = 0.5 * container.clientHeight;
         this.setColor(options||{});
         container.appendChild(this.svg);
-        this.svg.addEventListener('wheel', this.onScroll);
+        this.svg.addEventListener('wheel', event => this.trigger('wheel', {event}));
     };
     
     private getPoints(){
@@ -109,17 +116,51 @@ export class SVGWaveRender extends AWaveRender{
         this.draw();
     }
 
-    private onScroll = (event: Event) => {
-        event.returnValue = false;
-        const deltaY = event && (<any>event).deltaY;
-        if(deltaY){
-            deltaY < 0? this.scaleX+= this.scaleDelta : this.scaleX -= this.scaleDelta;
+    private wheelProcesser = ({viewPercent, event, isScale }: WaveWheelEventTrigger): WaveWheelEvent => {
+        
+        if( event instanceof WheelEvent){ 
+            event.returnValue = false;
+            const targetOffsetLeft = this.getBoddyLeftOffset(<HTMLElement>event.target);
+            const svgOffsetLeft = this.getBoddyLeftOffset(this.svg);
+            
+            isScale =  event.deltaY < 0;
+            viewPercent = (event.clientX + targetOffsetLeft - svgOffsetLeft)/this.svg.clientWidth;
         }
+
+        const totalPercent = viewPercent;
+        const startPercent = 0;
+        const endPercent = 1;
+        return  { 
+            endPercent, 
+            startPercent, 
+            totalPercent, 
+            isScale 
+        };
+    };
+
+    private getBoddyLeftOffset(element: HTMLElement|SVGElement):number {
+        let offsetLeft = 0;
+        while(element !== document.body){
+
+            if(element instanceof HTMLElement){
+                offsetLeft += element.offsetLeft||0;
+            }
+            element = element.parentElement;
+        }
+        return offsetLeft;
+    }
+
+    private onWheel = ({ startPercent, endPercent, totalPercent, isScale }: WaveWheelEvent) => {
+       
+        this.scaleX+= isScale?  this.scaleDelta : -this.scaleDelta;
+
         this.scaleX = Math.max(this.scaleDelta, this.scaleX);
-        if(this.drawTimer){
-            clearTimeout(this.drawTimer);
-        }
-        this.drawTimer = setTimeout( () =>this.draw(), 200);
+        
+        // if(this.drawTimer){
+        //     clearTimeout(this.drawTimer);
+        // }
+        // this.drawTimer = setTimeout( () =>this.draw(), 200);
+        this.draw();
     }
 
     clear(){

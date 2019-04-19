@@ -5,8 +5,8 @@ import { SVGWaveRender } from "../../plugins/render/implements/SVGWaveRender";
 import { DataTransformer } from "../../plugins/data_transformer/DataTransformer";
 import { IWaveRender } from "../../plugins/render/interfaces/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interfaces/IWavDecoder";
-import { Emiter } from "../../util/event_emiter/Emiter";
-import { IEmiter } from "../../util/event_emiter/IEmiter";
+import { Emiter } from "../../util/event/Emiter";
+import { IEmiter } from "../../util/event/IEmiter";
 import { EventHandle } from "./EventHandle";
 
 let PLUGINS: WaveRollingPlugins = {
@@ -29,7 +29,7 @@ export abstract class AWaveRolling extends EventHandle<WaveRollingEventsTrigger,
     this.setTriggerProcesser('abort', () => null );
     // 图像未缩放.
     this.setTriggerProcesser('click', ({viewPercent}) => ({totalPercent: viewPercent}));
-    this.setTriggerProcesser('wheel', ({viewPercent}) => ({totalPercent: viewPercent, startPercent: 0, endPercent: 1}));
+    this.setTriggerProcesser('wheel', ({viewPercent}) => ({totalPercent: viewPercent, startPercent: 0, endPercent: 1, isScale: true}));
    }
 
 

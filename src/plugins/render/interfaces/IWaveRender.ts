@@ -1,4 +1,5 @@
 import { IEventHandle } from "../../../main/interfaces/IEventHandle";
+import { WaveRenderEventsTrigger, WaveRenderEvents } from "./IWaveRenderEvents";
 
 export interface WaveRenderOptions{
 
@@ -7,21 +8,65 @@ export interface WaveRenderOptions{
 }
 
 
-export interface WaveRenderEvents {
+// export interface WaveRenderEvents {
 
-    click: { totalPercent: number };
+//     click: { 
+        
+//         /**
+//          * the percent of curent duration. 
+//          */
+//         totalPercent: number
+//     };
 
-    wheel: { totalPercent: number, startPercent: number, endPercent: number };
+//     wheel: {
+//         /**
+//          * the percent of curent duration. 
+//          */
+//         totalPercent: number, 
+        
+//         /**
+//          * the start view duration percent.  
+//          */
+//         startPercent: number, 
+
+//         /**
+//          * the end view duration percent.
+//          */
+//         endPercent: number 
+//     };
     
-}
+// }
 
-export interface WaveRenderEventsTrigger {
+// export interface WaveRenderEventsTrigger {
 
-    click: { viewPercent: number };
+//     click: ClickEventTrigger;
 
-    wheel: { viewPercent: number };
-}
+//     wheel: WheelEventTrigger;
+// }
 
+// export interface ClickEventTrigger{
+//     /**
+//      * the click point X in the view width percent.
+//      */
+//     viewPercent?: number,
+
+//     /**
+//      * the click event trigger by dom.
+//      */
+//     event?: Event,
+// }
+
+// export interface WheelEventTrigger{
+//         /**
+//         * the wheel point X in the view width percent.
+//         */
+//        viewPercent?: number,
+
+//        /**
+//         * the wheel event trigger by dom.
+//         */
+//        event?: Event,
+// }
 
 /**
  *  rend the data in browser.

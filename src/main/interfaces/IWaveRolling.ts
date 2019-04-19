@@ -1,10 +1,11 @@
 import { DataTransformer } from '../../plugins/data_transformer/DataTransformer';
-import { WaveRenderOptions, IWaveRender, WaveRenderEvents, WaveRenderEventsTrigger } from '../../plugins/render/interfaces/IWaveRender';
+import { WaveRenderOptions, IWaveRender } from '../../plugins/render/interfaces/IWaveRender';
 import { WavDecoder } from '../../plugins/decoder/implements/WavDecoder';
 import { WaveRender } from '../../plugins/render/implements/CanvasWaveRender';
 import { IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from '../../plugins/decoder/interfaces/IWavDecoder';
 import { SVGWaveRender } from '../../plugins/render/implements/SVGWaveRender';
 import { IEventHandle } from './IEventHandle';
+import { WaveRenderEvents, WaveRenderEventsTrigger } from '../../plugins/render/interfaces/IWaveRenderEvents';
 
 let PLUGINS: WaveRollingPlugins = {
 
