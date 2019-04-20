@@ -19,7 +19,7 @@ it only support wav format encoded PCM audio.
 
 ![demo](https://github.com/CofeeWithRose/WaveRolling/blob/master/source/waverolling.png?raw=true)
 
-## demo
+## start the demo
 ---
 	npm i
 	
@@ -33,25 +33,27 @@ it only support wav format encoded PCM audio.
 
 ## 基本使用 basic
 ----
-	import { WaveVisual } from './index.js';
+
+	
+	import { WaveRolling } from 'wave-rolling';
 
 	// instance the WaveVisual.
-	const waveVisual = new WaveVisual(
+	const waveRolling = new WaveRolling(
 		document.querySelector('#container'),// the container of canvas.
 	);
 	
 	window.onLoadAudio = function onLoadAudio(){
 		const data = {param1:1, param:2}; // the params while requesting the  audio. 
 		// load an draw wave in canvas.
-		waveVisual.load(`source/${document.querySelector('#input').value}.wav`, {data});
+		waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
 	}
 	
 ### 颜色设置 color
 ----
-	import { WaveVisual } from './index.js';
+	import { WaveRolling } from 'wave-rolling';
 
 	// instance the WaveVisual.
-	const waveVisual = new WaveVisual(
+	const waveRolling = new WaveRolling(
 		document.querySelector('#container'),// the container of canvas.
 		{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']} // set the color of canvas.
 	);
@@ -59,5 +61,5 @@ it only support wav format encoded PCM audio.
 	window.onLoadAudio = function onLoadAudio(){
 		const data = {param1:1, param:2}; // the params while requesting the  audio. 
 		// load an draw wave in canvas.
-		waveVisual.load(`source/${document.querySelector('#input').value}.wav`, {data});
+		waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
 	}
