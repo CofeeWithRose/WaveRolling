@@ -1,6 +1,6 @@
-import { WaveRenderOptions } from "../interfaces/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
 import { WaveWheelEventTrigger, WaveWheelEvent } from "../interfaces/IWaveRenderEvents";
+import { WaveRenderOptions } from "../interfaces/IWaveRender";
 
 export class SVGWaveRender extends AWaveRender{
 

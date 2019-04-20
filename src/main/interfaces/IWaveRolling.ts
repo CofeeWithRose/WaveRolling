@@ -1,5 +1,5 @@
 import { DataTransformer } from '../../plugins/data_transformer/DataTransformer';
-import { WaveRenderOptions, IWaveRender } from '../../plugins/render/interfaces/IWaveRender';
+import {  IWaveRender, WaveRenderOptions } from '../../plugins/render/interfaces/IWaveRender';
 import { WavDecoder } from '../../plugins/decoder/implements/WavDecoder';
 import { WaveRender } from '../../plugins/render/implements/CanvasWaveRender';
 import { IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from '../../plugins/decoder/interfaces/IWavDecoder';

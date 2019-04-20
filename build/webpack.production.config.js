@@ -9,6 +9,7 @@ module.exports = {
         libraryTarget: 'umd',
     },
     optimization: {
+        
         minimizer: [new UglifyJsPlugin()],
     },
     devtool: false,

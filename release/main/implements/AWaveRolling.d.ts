@@ -1,4 +1,4 @@
-import { WaveRollingPlugins, WaveRollingOptions, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger } from "../interfaces/IWaveRolling";
+import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions } from "../interfaces/IWaveRolling";
 import { IWaveRender } from "../../plugins/render/interfaces/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interfaces/IWavDecoder";
 import { EventHandle } from "./EventHandle";

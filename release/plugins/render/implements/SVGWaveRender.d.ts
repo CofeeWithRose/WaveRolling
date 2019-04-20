@@ -1,5 +1,5 @@
-import { WaveRenderOptions } from "../interfaces/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
+import { WaveRenderOptions } from "../interfaces/IWaveRender";
 export declare class SVGWaveRender extends AWaveRender {
     constructor();
     private svg;

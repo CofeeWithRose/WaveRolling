@@ -1,5 +1,6 @@
-import { WaveRollingOptions, WaveRollingPlugins, WaveRollingLoadOptions } from '../interfaces/IWaveRolling';
 import { AWaveRolling } from './AWaveRolling';
+import { WaveRollingOptions, WaveRollingLoadOptions } from '../interfaces/IWaveRolling';
+
 
 
 

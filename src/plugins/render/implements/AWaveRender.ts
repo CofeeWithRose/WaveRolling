@@ -3,6 +3,7 @@ import { EventHandle } from "../../../main/implements/EventHandle";
 import { WaveRenderEventsTrigger, WaveRenderEvents } from "../interfaces/IWaveRenderEvents";
 
 
+
 export abstract class AWaveRender extends EventHandle<WaveRenderEventsTrigger, WaveRenderEvents> implements IWaveRender{
 
     constructor(){

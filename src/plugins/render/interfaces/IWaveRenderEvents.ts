@@ -35,7 +35,7 @@ export interface WaveWheelEvent{
 }
 
 
-export interface WaveRenderEventsTrigger {
+export class WaveRenderEventsTrigger {
 
     click: WaveClickEventTrigger;
 

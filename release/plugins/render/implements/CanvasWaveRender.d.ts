@@ -1,5 +1,5 @@
-import { WaveRenderOptions } from "../interfaces/IWaveRender";
 import { AWaveRender } from "./AWaveRender";
+import { WaveRenderOptions } from "../interfaces/IWaveRender";
 /**
  * create canvas and rend the data of audo on it.
  */
