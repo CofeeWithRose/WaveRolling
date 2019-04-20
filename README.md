@@ -35,7 +35,7 @@ it only support wav format encoded PCM audio.
 ----
 
 	
-	import { WaveRolling } from 'wave-rolling';
+	import { WaveRolling } from 'wave-rolling';// you shold execut " npm i wave-rolling " first.
 
 	// instance the WaveVisual.
 	const waveRolling = new WaveRolling(
