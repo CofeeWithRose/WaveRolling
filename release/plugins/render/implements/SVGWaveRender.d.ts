@@ -12,7 +12,7 @@ export declare class SVGWaveRender extends AWaveRender {
     protected halfHeight: number;
     protected drawTimer: number;
     protected color: string;
-    protected totalPercent: number;
+    protected offsetPercent: number;
     protected svgListener: (mutations: MutationRecord[], observer: MutationObserver) => void;
     init(container: HTMLElement, options?: WaveRenderOptions): void;
     protected getPoints(): string;

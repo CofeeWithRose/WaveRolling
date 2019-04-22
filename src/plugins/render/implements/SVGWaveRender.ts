@@ -34,7 +34,7 @@ export class SVGWaveRender extends AWaveRender{
 
     // protected endXPercent = 1;
 
-    protected totalPercent = 1;
+    protected offsetPercent = 0;
 
     // protected transScaleX = 0;
 
@@ -79,8 +79,8 @@ export class SVGWaveRender extends AWaveRender{
     protected getPoints(){
         let result = '';
         
-        const startIndex = Math.floor(0 * this.pointArray.length);
-        const endIndex = Math.floor(1 * this.pointArray.length);
+        const startIndex = Math.floor( this.offsetPercent * this.pointArray.length);
+        const endIndex = Math.floor(( this.offsetPercent + this.container.clientWidth/ this.scaleX ) * this.pointArray.length);
 
         const detIndex = Math.floor(0.1/(this.scaleX*devicePixelRatio))||1;
 
@@ -174,10 +174,12 @@ export class SVGWaveRender extends AWaveRender{
             isScale =  event.deltaY < 0;
             viewPercent = (event.clientX + targetOffsetLeft - svgOffsetLeft)/this.svg.clientWidth;
         }
+        const halfViewTotalPercent = viewPercent * this.container.clientWidth/this.pointArray.length ;
+        const totalPercent = this.offsetPercent + halfViewTotalPercent;
+        const startPercent = this.offsetPercent = this.pointArray.length * (halfViewTotalPercent + + this.offsetPercent);
+        const endPercent = this.offsetPercent + 2*halfViewTotalPercent;
+        
 
-        const totalPercent = this.startXPercent + (this.endXPercent - this.startXPercent) * viewPercent;
-        const startPercent = 0;
-        const endPercent = 1;
         return  { 
             endPercent, 
             startPercent, 
