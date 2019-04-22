@@ -78,19 +78,11 @@ export class SVGWaveRender extends AWaveRender{
     
     protected getPoints(){
         let result = '';
-        
         const startIndex = Math.floor( this.offsetPercent * this.pointArray.length);
-        const endIndex = Math.floor(( this.offsetPercent + this.container.clientWidth/ this.scaleX ) * this.pointArray.length);
-
-        const detIndex = Math.floor(0.1/(this.scaleX*devicePixelRatio))||1;
-
-        for(let i = startIndex; i< endIndex; i+=detIndex){
-            const index =  i * this.scaleX + startIndex;
-            if( index < this.clientWidth *devicePixelRatio){
-                result +=`${index},${this.pointArray[i]} `;
-            }else{
-                break;
-            }
+        const deltaX = 0.1/devicePixelRatio
+        for(let x = 0; x< this.clientWidth; x+= deltaX){
+            const index = Math.ceil(x/this.scaleX + startIndex);
+            result +=`${x},${this.pointArray[index]} `;
         }
         return result;
     }
@@ -176,9 +168,9 @@ export class SVGWaveRender extends AWaveRender{
         }
         const halfViewTotalPercent = viewPercent * this.container.clientWidth/this.pointArray.length ;
         const totalPercent = this.offsetPercent + halfViewTotalPercent;
-        const startPercent = this.offsetPercent = this.pointArray.length * (halfViewTotalPercent + + this.offsetPercent);
-        const endPercent = this.offsetPercent + 2*halfViewTotalPercent;
-        
+        const startPercent = halfViewTotalPercent + this.offsetPercent;
+        const endPercent = startPercent + 2*halfViewTotalPercent;
+        debugger
 
         return  { 
             endPercent, 
@@ -205,12 +197,12 @@ export class SVGWaveRender extends AWaveRender{
         this.scaleX+= isScale?  this.scaleDelta : -this.scaleDelta;
 
         this.scaleX = Math.max(this.scaleDelta, this.scaleX);
-
-        this.startXPercent = startPercent;
+        this.offsetPercent = startPercent;
+        // this.startXPercent = startPercent;
         
-        this.endXPercent = endPercent;
+        // this.endXPercent = endPercent;
 
-        this.totalPercent = totalPercent;
+        // this.totalPercent = totalPercent;
         
         // if(this.drawTimer){
         //     clearTimeout(this.drawTimer);
