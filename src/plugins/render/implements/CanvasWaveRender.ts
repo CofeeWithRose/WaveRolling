@@ -99,7 +99,7 @@ export class WaveRender extends AWaveRender {
         for(let i = 0; i <= width; i++){
             const x = startX + i;
             const yIndex = Math.floor(yIndexStep * i);
-            const dtY =  this.halfHeight * floatArrayData[yIndex];
+            const dtY = Math.ceil( this.halfHeight * floatArrayData[yIndex]);
             this.context.moveTo(x, this.halfHeight);
             this.context.lineTo( x,  this.halfHeight + dtY);
             this.context.moveTo(x, this.halfHeight);

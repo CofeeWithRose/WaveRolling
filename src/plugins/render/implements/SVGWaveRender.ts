@@ -30,6 +30,12 @@ export class SVGWaveRender extends AWaveRender{
 
     protected color: string;
 
+    // protected startXPercent = 0;
+
+    // protected endXPercent = 1;
+
+    protected totalPercent = 1;
+
     // protected transScaleX = 0;
 
     protected svgListener = ( mutations: MutationRecord[], observer: MutationObserver ) => {
@@ -72,9 +78,19 @@ export class SVGWaveRender extends AWaveRender{
     
     protected getPoints(){
         let result = '';
+        
+        const startIndex = Math.floor(0 * this.pointArray.length);
+        const endIndex = Math.floor(1 * this.pointArray.length);
+
         const detIndex = Math.floor(0.1/(this.scaleX*devicePixelRatio))||1;
-        for(let i = 0; i< this.pointArray.length && i * this.scaleX< this.clientWidth *devicePixelRatio; i+=detIndex){
-            result +=`${i * this.scaleX},${this.pointArray[i]} `;
+
+        for(let i = startIndex; i< endIndex; i+=detIndex){
+            const index =  i * this.scaleX + startIndex;
+            if( index < this.clientWidth *devicePixelRatio){
+                result +=`${index},${this.pointArray[i]} `;
+            }else{
+                break;
+            }
         }
         return result;
     }
@@ -159,7 +175,7 @@ export class SVGWaveRender extends AWaveRender{
             viewPercent = (event.clientX + targetOffsetLeft - svgOffsetLeft)/this.svg.clientWidth;
         }
 
-        const totalPercent = viewPercent;
+        const totalPercent = this.startXPercent + (this.endXPercent - this.startXPercent) * viewPercent;
         const startPercent = 0;
         const endPercent = 1;
         return  { 
@@ -187,6 +203,12 @@ export class SVGWaveRender extends AWaveRender{
         this.scaleX+= isScale?  this.scaleDelta : -this.scaleDelta;
 
         this.scaleX = Math.max(this.scaleDelta, this.scaleX);
+
+        this.startXPercent = startPercent;
+        
+        this.endXPercent = endPercent;
+
+        this.totalPercent = totalPercent;
         
         // if(this.drawTimer){
         //     clearTimeout(this.drawTimer);
