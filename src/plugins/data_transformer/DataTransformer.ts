@@ -35,7 +35,7 @@ function strfyObject(data: any, curStr: string, prefix: string){
         }
     }
     return curStr;
-}
+};
 export function DataTransformer(url: string, data: any, method: 'GET'|'POST'|'PUT'|'DELETE'){
     url = url || '';
     method = method || 'GET';

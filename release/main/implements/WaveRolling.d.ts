@@ -11,6 +11,7 @@ export declare class WaveRolling extends AWaveRolling {
      */
     load(audioUrl: string, options?: WaveRollingLoadOptions): void;
     loadBlob(arrayBuffer: ArrayBuffer): void;
+    protected initDecoder(): void;
     /**
      * it can be user only after load ArrayBuffer.
      * @param {ArrayBuffer} arrayBuffer
