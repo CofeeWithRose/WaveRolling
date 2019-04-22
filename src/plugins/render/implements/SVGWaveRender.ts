@@ -8,26 +8,48 @@ export class SVGWaveRender extends AWaveRender{
         super();
         this.setTriggerProcesser('wheel', this.wheelProcesser);
         this.addListener('wheel', this.onWheel);
+
+       
     }
 
-    private svg: SVGElement;
+    protected container: HTMLElement;
 
-    private scaleX = 1;
+    protected svg: SVGElement;
 
-    private scaleDelta = 1;
+    protected scaleX = 1;
 
-    private pointArray = new Array<number>();
+    protected scaleDelta = 1;
 
-    private clientWidth: number;
+    protected pointArray = new Array<number>();
 
-    private halfHeight: number;
+    protected clientWidth: number;
 
-    private drawTimer: number;
+    protected halfHeight: number;
 
-    private color: string;
+    protected drawTimer: number;
+
+    protected color: string;
+
+    // protected transScaleX = 0;
+
+    protected svgListener = ( mutations: MutationRecord[], observer: MutationObserver ) => {
+        for( let i = 0; i < mutations.length; i++ ){
+            const mutation = mutations[i];
+            if( this.container === mutation.target ){
+                // TODO set translate in svg onresize.
+                console.log( mutations );
+                break;
+            }
+        }
+    }
+
+    // protected svgListener = ( event: Event ) => {
+    //     console.log( event );
+    // }
 
     init(container: HTMLElement, options?: WaveRenderOptions) {
-        document.addEventListener
+        // document.addEventListener
+        this.container = container;
         this.svg = document.createElementNS( "http://www.w3.org/2000/svg",'svg');
         this.svg.style.width = '100%';
         this.clientWidth = container.clientWidth;
@@ -36,9 +58,19 @@ export class SVGWaveRender extends AWaveRender{
         this.setColor(options||{});
         container.appendChild(this.svg);
         this.svg.addEventListener('wheel', event => this.trigger('wheel', {event}));
+
+        const observer = new MutationObserver(this.svgListener);
+        observer.observe( container, {  
+            attributeOldValue: true,
+            attributes: true,
+            characterData: true,
+            characterDataOldValue: true,
+            childList: true,
+            subtree: true 
+        } );
     };
     
-    private getPoints(){
+    protected getPoints(){
         let result = '';
         const detIndex = Math.floor(0.1/(this.scaleX*devicePixelRatio))||1;
         for(let i = 0; i< this.pointArray.length && i * this.scaleX< this.clientWidth *devicePixelRatio; i+=detIndex){
@@ -47,7 +79,7 @@ export class SVGWaveRender extends AWaveRender{
         return result;
     }
 
-    private setColor({ color } :  WaveRenderOptions ){
+    protected setColor({ color } :  WaveRenderOptions ){
 
         if(color instanceof Array){
             const linearGradientContent = color.map<string>( (item, index) => {
@@ -72,7 +104,7 @@ export class SVGWaveRender extends AWaveRender{
         
     }
 
-    private draw(){
+    protected draw(){
 
         let polyline = this.svg.querySelector('#waverolling_line');
         if(!polyline){
@@ -100,7 +132,7 @@ export class SVGWaveRender extends AWaveRender{
         this.firstRender(audioBuffer, startPercent, endPercent);
     }
 
-    private firstRender(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
+    protected firstRender(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
         const waveWidth = audioBuffer.length/ endPercent - startPercent;
         this.scaleX = this.clientWidth / waveWidth;
         this.scaleDelta = this.scaleX;
@@ -108,7 +140,7 @@ export class SVGWaveRender extends AWaveRender{
         this.render = this.afterRender;
     };
 
-    private afterRender(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
+    protected afterRender(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
         const dataArray = audioBuffer.getChannelData(0);
         for(let i = 0; i< dataArray.length; i++){
             this.pointArray.push(this.halfHeight +　this.halfHeight * dataArray[i]);
@@ -116,7 +148,7 @@ export class SVGWaveRender extends AWaveRender{
         this.draw();
     }
 
-    private wheelProcesser = ({viewPercent, event, isScale }: WaveWheelEventTrigger): WaveWheelEvent => {
+    protected wheelProcesser = ({viewPercent, event, isScale }: WaveWheelEventTrigger): WaveWheelEvent => {
         
         if( event instanceof WheelEvent){ 
             event.returnValue = false;
@@ -138,7 +170,7 @@ export class SVGWaveRender extends AWaveRender{
         };
     };
 
-    private getBoddyLeftOffset(element: HTMLElement|SVGElement):number {
+    protected getBoddyLeftOffset(element: HTMLElement|SVGElement):number {
         let offsetLeft = 0;
         while(element !== document.body){
 
@@ -150,7 +182,7 @@ export class SVGWaveRender extends AWaveRender{
         return offsetLeft;
     }
 
-    private onWheel = ({ startPercent, endPercent, totalPercent, isScale }: WaveWheelEvent) => {
+    protected onWheel = ({ startPercent, endPercent, totalPercent, isScale }: WaveWheelEvent) => {
        
         this.scaleX+= isScale?  this.scaleDelta : -this.scaleDelta;
 
