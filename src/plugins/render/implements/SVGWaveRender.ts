@@ -107,7 +107,7 @@ export class SVGWaveRender extends AWaveRender{
             this.svg.appendChild(defs);
             this.color = 'url(#wave_rolling_color)';
         }else{
-            this.color = color;
+            this.color = color||'black';
         }
         
     }
@@ -166,6 +166,9 @@ export class SVGWaveRender extends AWaveRender{
             isScale =  event.deltaY < 0;
             viewPercent = (event.clientX + targetOffsetLeft - svgOffsetLeft)/this.svg.clientWidth;
         }
+        if(!viewPercent){
+            throw `Wheel Event Error: you must has a  viewPercent or event attribuite`;
+        }
         const halfViewTotalPercent = viewPercent * this.container.clientWidth/this.pointArray.length ;
         const totalPercent = this.offsetPercent + halfViewTotalPercent;
         const startPercent = halfViewTotalPercent + this.offsetPercent;
@@ -176,7 +179,7 @@ export class SVGWaveRender extends AWaveRender{
             endPercent, 
             startPercent, 
             totalPercent, 
-            isScale 
+            isScale: isScale || false, 
         };
     };
 
@@ -187,7 +190,7 @@ export class SVGWaveRender extends AWaveRender{
             if(element instanceof HTMLElement){
                 offsetLeft += element.offsetLeft||0;
             }
-            element = element.parentElement;
+            element = element.parentElement|| document.body;
         }
         return offsetLeft;
     }

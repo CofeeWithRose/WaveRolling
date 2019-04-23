@@ -1,10 +1,10 @@
-import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions } from "../interfaces/IWaveRolling";
+import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions, InitWaveRollingPlugins } from "../interfaces/IWaveRolling";
 import { IWaveRender } from "../../plugins/render/interfaces/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interfaces/IWavDecoder";
 import { EventHandle } from "./EventHandle";
 export declare abstract class AWaveRolling extends EventHandle<WaveRollingEventsTrigger, WaveRollingEvents> implements IWaveRolling {
     protected constructor();
-    protected plugins: WaveRollingPlugins;
+    protected plugins: InitWaveRollingPlugins;
     protected render: IWaveRender;
     protected decoder: IWavDecoder;
     /**
@@ -17,10 +17,10 @@ export declare abstract class AWaveRolling extends EventHandle<WaveRollingEvents
      * list all plugins.
      */
     static plugins(): {
-        Decorder?: new () => IWavDecoder;
-        Render?: new () => IWaveRender;
-        HDRender?: new () => IWaveRender;
-        DataTransformer?: (url: string, data: any, method?: "GET" | "PUT" | "DELETE" | "POST") => {
+        Decorder: new () => IWavDecoder;
+        Render: new () => IWaveRender;
+        HDRender: new () => IWaveRender;
+        DataTransformer: (url: string, data: any, method?: "GET" | "PUT" | "DELETE" | "POST" | undefined) => {
             url: string;
             fetchOptions: RequestInit;
         };

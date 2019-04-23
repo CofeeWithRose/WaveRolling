@@ -6,7 +6,7 @@ export interface RangeSegment{
     length: number;
     cacheOffset: number;
 }
-export interface DataBufferRange{
+export class DataBufferRange{
     length: number;
     segments: Array<RangeSegment>;
 }

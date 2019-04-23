@@ -20,7 +20,7 @@ export class Emiter implements IEmiter{
                     funArray.splice(index, 1);
                 }         
             }else{
-                this.eventMap[name] = null;
+                delete this.eventMap[name];
             }
 
         }

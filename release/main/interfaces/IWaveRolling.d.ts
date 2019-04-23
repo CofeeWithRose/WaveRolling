@@ -12,11 +12,20 @@ export interface WaveRollingLoadOptions {
     data?: object;
     method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
 }
+export interface InitWaveRollingPlugins {
+    Decorder: new () => IWavDecoder;
+    Render: new () => IWaveRender;
+    HDRender: new () => IWaveRender;
+    DataTransformer: (url: string, data: any, method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
+        url: string;
+        fetchOptions: RequestInit;
+    };
+}
 export interface WaveRollingPlugins {
     Decorder?: new () => IWavDecoder;
     Render?: new () => IWaveRender;
     HDRender?: new () => IWaveRender;
-    DataTransformer?: (url: string, data: any, method: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
+    DataTransformer?: (url: string, data: any, method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
         url: string;
         fetchOptions: RequestInit;
     };

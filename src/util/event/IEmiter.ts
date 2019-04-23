@@ -2,6 +2,7 @@
 export interface EventMap {
     
     [index: string]: Array<(...params: Array<any>) => void>
+
 }
 
 export interface IEmiter{

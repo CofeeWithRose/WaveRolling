@@ -121,21 +121,19 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
     private release(){
 
-        this.dataBufferCache = null;
-        this.dataBufferRangeList = null;
+        this.dataBufferCache = [];
+        this.dataBufferRangeList = [];
 
 
-        this.perDataBufferPiceLength = null;
+        this.perDataBufferPiceLength = 0;
 
         this.byteSpeed = 0;
 
         this.duration = 0;
 
-        this.audioContext = null;
-
         this.totalDataBufferLength = 0;
 
-        this.headerBuffer = null;
+        this.headerBuffer = new ArrayBuffer(0);
         this.decodedDataByteLength = 0;
         this.lastCacheIndex = 0;
 
@@ -171,7 +169,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
                 offset += needLength;
                 this.dataBufferRangeList.push(this.tempBufferRange);
 
-                this.tempBufferRange = null;
+                this.tempBufferRange = new DataBufferRange();
             } else {
                 this.tempBufferRange.segments.push({ cacheIndex, offset, length: bufferPiece.byteLength, cacheOffset: this.cacheOffset });
                 this.tempBufferRange.length += bufferPiece.byteLength;
@@ -238,7 +236,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
                     duration: this.duration,
                 });
                 if (isComplete) {
-                    this.dataBufferCache = null;
+                    this.dataBufferCache = [];
                     this.trigger('complete');
                     this.release();
                 }

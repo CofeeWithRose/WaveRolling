@@ -1,4 +1,4 @@
-import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions } from "../interfaces/IWaveRolling";
+import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions, InitWaveRollingPlugins } from "../interfaces/IWaveRolling";
 import { WavDecoder } from "../../plugins/decoder/implements/WavDecoder";
 import { WaveRender } from "../../plugins/render/implements/CanvasWaveRender";
 import { SVGWaveRender } from "../../plugins/render/implements/SVGWaveRender";
@@ -9,7 +9,7 @@ import { Emiter } from "../../util/event/Emiter";
 import { IEmiter } from "../../util/event/IEmiter";
 import { EventHandle } from "./EventHandle";
 
-let PLUGINS: WaveRollingPlugins = {
+let PLUGINS: InitWaveRollingPlugins = {
 
     Decorder: WavDecoder,
     
@@ -28,12 +28,12 @@ export abstract class AWaveRolling extends EventHandle<WaveRollingEventsTrigger,
     this.setTriggerProcesser('error', error => error );
     this.setTriggerProcesser('abort', () => null );
     // 图像未缩放.
-    this.setTriggerProcesser('click', ({viewPercent}) => ({totalPercent: viewPercent}));
-    this.setTriggerProcesser('wheel', ({viewPercent}) => ({totalPercent: viewPercent, startPercent: 0, endPercent: 1, isScale: true}));
+    this.setTriggerProcesser('click', ({viewPercent}) => ({totalPercent: viewPercent||0}));
+    this.setTriggerProcesser('wheel', ({viewPercent}) => ({totalPercent: viewPercent||0, startPercent: 0, endPercent: 1, isScale: true}));
    }
 
 
-    protected plugins: WaveRollingPlugins;
+    protected plugins: InitWaveRollingPlugins;
 
     protected render: IWaveRender;
     

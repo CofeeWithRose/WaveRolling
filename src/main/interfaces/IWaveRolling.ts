@@ -7,7 +7,7 @@ import { SVGWaveRender } from '../../plugins/render/implements/SVGWaveRender';
 import { IEventHandle } from './IEventHandle';
 import { WaveRenderEvents, WaveRenderEventsTrigger } from '../../plugins/render/interfaces/IWaveRenderEvents';
 
-let PLUGINS: WaveRollingPlugins = {
+let PLUGINS: InitWaveRollingPlugins = {
 
     Decorder: WavDecoder,
     
@@ -32,6 +32,18 @@ export interface WaveRollingLoadOptions {
     
     method?: 'GET'|'POST'|'PUT'|'DELETE';
 }
+
+export interface InitWaveRollingPlugins  {
+
+    Decorder: new  ()=>  IWavDecoder;
+
+    Render: new () => IWaveRender;
+
+    HDRender: new () => IWaveRender;
+
+    DataTransformer:   ( url: string, data: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ) => 
+                        { url: string, fetchOptions: RequestInit };
+};
 
 export interface WaveRollingPlugins {
 

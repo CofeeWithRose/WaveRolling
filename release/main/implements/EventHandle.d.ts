@@ -10,7 +10,7 @@ export declare class EventHandle<TriggersMap, EventsMap extends {
    * @param name 时间名称
    * @param callback
    */
-    addListener<N extends keyof EventsMap>(name: N, callback: (info?: EventsMap[N]) => void): void;
+    addListener<N extends keyof EventsMap>(name: N, callback: (info: EventsMap[N]) => void): void;
     /**
      * 移除事件监听.
      * @param name
@@ -28,6 +28,6 @@ export declare class EventHandle<TriggersMap, EventsMap extends {
      * @param name
      * @param fun
      */
-    protected setTriggerProcesser<N extends keyof TriggersMap>(name: N, fun: (param?: TriggersMap[N]) => EventsMap[N]): void;
+    protected setTriggerProcesser<N extends keyof TriggersMap>(name: N, fun: (param: TriggersMap[N]) => EventsMap[N]): void;
     clearListener(): void;
 }

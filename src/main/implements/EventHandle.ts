@@ -17,7 +17,7 @@ export class EventHandle<TriggersMap, EventsMap extends {[N in keyof TriggersMap
      * @param name 时间名称
      * @param callback 
      */
-    addListener<N extends keyof EventsMap>( name: N, callback: ( info?: EventsMap[N]) => void ): void{
+    addListener<N extends keyof EventsMap>( name: N, callback: ( info: EventsMap[N]) => void ): void{
         document.body.click
         this.listeners.addListener(<string>name, callback);
     };
@@ -51,7 +51,7 @@ export class EventHandle<TriggersMap, EventsMap extends {[N in keyof TriggersMap
      * @param name 
      * @param fun 
      */
-    protected setTriggerProcesser<N extends keyof TriggersMap>(name: N,  fun: ( param?: TriggersMap[N]) => EventsMap[N] ): void{
+    protected setTriggerProcesser<N extends keyof TriggersMap>(name: N,  fun: ( param: TriggersMap[N]) => EventsMap[N] ): void{
         this.triggerProcess[<string>name] = <any>fun;
     };
 
