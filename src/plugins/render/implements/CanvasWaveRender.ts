@@ -69,9 +69,8 @@ export class WaveRender extends AWaveRender {
         const yIndexStep = Math.floor(floatArrayData.length/ width)||1;
 
         this.context.beginPath();
-        // this.context.miterLimit = value
-        this.context.lineWidth = 0.05;
-        for(let i = 0; i <= width; i+=0.015){
+        this.context.lineWidth = 0.5;
+        for(let i = 0; i <= width; i+= 0.25){
             const x = startX + i;
             const yIndex = Math.floor(yIndexStep * i);
             const dtY = Math.ceil( this.halfHeight * floatArrayData[yIndex]);
