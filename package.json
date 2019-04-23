@@ -1,6 +1,6 @@
 {
   "name": "wave-rolling",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "show large(more than 1G) wav audio in canvas",
   "main": "./release/index.js",
   "scripts": {
