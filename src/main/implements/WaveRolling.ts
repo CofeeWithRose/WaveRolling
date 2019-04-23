@@ -85,7 +85,7 @@ export class WaveRolling extends AWaveRolling{
 
 
     private loadAudio(srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
-        const controller: AbortController = AbortController && new AbortController()||{ signal: null, abort: () => {}};
+        const controller: AbortController = (<any>window).AbortController && new AbortController()||{ signal: null, abort: () => {}};
         const signal = controller.signal;
         const { url, fetchOptions } = this.plugins.DataTransformer( srcUrl, srcData, method  );
         const option = {

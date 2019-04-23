@@ -28,7 +28,7 @@ const waveRolling = WaveRolling.create(
     document.querySelector('#container'),
     { 
         color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531'],
-        scalable: true,
+        // scalable: true,
     }
 );
 

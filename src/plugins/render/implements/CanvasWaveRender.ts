@@ -51,62 +51,29 @@ export class WaveRender extends AWaveRender {
     }
     reset(){
         this.setColor();
-        // this._context.beginPath();
-        // this._context.strokeStyle = this._color;
-        // this._context.lineWidth = 1;
-        // this._context.moveTo(0, this._halfHeight);
-        // this._context.lineTo(this._canvas.width, this._halfHeight);
-        // this._context.stroke()
-        // this._context.beginPath();
-        // this._context.lineWidth = 1;
-        // this._context.moveTo(0, this._halfHeight);
     }
 
-    // render(audioBuffer, startPercent, endPercent){
-    //     const floatArrayData = audioBuffer.getChannelData(0);
-    //     const startX = this._canvas.width * startPercent;
-    //     const endX = this._canvas.width * endPercent;
-    //     const stepnum = Math.max (Math.floor( 100 *  (endX - startX) ) , 10);
-    //     const stepIndex = Math.max( Math.floor(floatArrayData.length/stepnum), 1);
-    //     const stepX = ( endX - startX )/ stepnum;
-    //     this._context.beginPath();
-    //     this._context.strokeStyle = this._color;
-
-    //     for(let i = 0; i < stepnum; i++){
-    //         const x = startX+ stepX*i;
-    //         this._context.lineTo( x,  this._halfHeight + this._halfHeight*floatArrayData[i * stepIndex]);
-    //     }
-    //     this._context.stroke();
-    // }
 
     render(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
-        
         let floatArrayData = audioBuffer.getChannelData(0);
         floatArrayData = floatArrayData.map( val => Math.abs(val));
-        // if(!this._isReset){
-        //     this._canvas.width = Math.min(30766,floatArrayData.length * 1/(endPercent - startPercent));
-        //     this._context = this._canvas.getContext('2d');
-        //     this.reset();
-        //     this._isReset = true;
-        // }
+       
         const startX = Math.floor(this.canvas.width * startPercent);
-        const endX = Math.ceil(this.canvas.width * endPercent);
+        const endX = Math.floor(this.canvas.width * endPercent);
         const width = (endX - startX)||10;
         const yIndexStep = Math.floor(floatArrayData.length/ width)||1;
+
         this.context.beginPath();
-        // this.context.strokeStyle = this.color;
-        this.context.lineWidth = 1;
+        this.context.lineWidth = 1.5;
         for(let i = 0; i <= width; i++){
             const x = startX + i;
             const yIndex = Math.floor(yIndexStep * i);
             const dtY = Math.ceil( this.halfHeight * floatArrayData[yIndex]);
-            this.context.moveTo(x, this.halfHeight);
-            this.context.lineTo( x,  this.halfHeight + dtY);
-            this.context.moveTo(x, this.halfHeight);
+            this.context.moveTo( x,  this.halfHeight + dtY);
             this.context.lineTo( x,  this.halfHeight - dtY);
+
         }
         this.context.stroke();
-        
     }
 
     clear(){
