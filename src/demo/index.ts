@@ -24,13 +24,18 @@ export function DataTransformer(url:string, data: any, method: "GET" | "PUT" | "
 /**
  * instance wa
  */
-const waveRolling = WaveRolling.create(
-    document.querySelector('#container'),
-    { 
-        color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531'],
-        // scalable: true,
-    }
-);
+const containner = document.querySelector('#container');
+let waveRolling: WaveRolling;
+if(containner instanceof HTMLElement){
+    waveRolling = WaveRolling.create(
+        containner,
+        { 
+            color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531'],
+            // scalable: true,
+        }
+    );
+}
+
 
 (<any>window).onSelect = function onSelect(event: Event){
 

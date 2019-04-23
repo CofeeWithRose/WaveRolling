@@ -16,15 +16,21 @@ export class WaveRender extends AWaveRender {
         const { color: optionColor } = options || { color: 'black' };
        
         this.canvas = document.createElement('canvas');
-        this.context = this.canvas.getContext('2d');
-        this.canvas.width = devicePixelRatio * Math.max (window.screen.width, window.screen.height); 
-        this.canvas.style.width = '100%';
-        this.canvas.style.height = '100%';
-        this.canvas.height = container.clientHeight;
-        this.halfHeight = this.canvas.height * 0.5;
-        this.color = optionColor;
-        this.reset();
-        container.appendChild(this.canvas);
+        const context = this.canvas.getContext('2d');
+        if(context){
+            this.context = context;
+            this.canvas.width = devicePixelRatio * Math.max (window.screen.width, window.screen.height); 
+            this.canvas.style.width = '100%';
+            this.canvas.style.height = '100%';
+            this.canvas.height = container.clientHeight;
+            this.halfHeight = this.canvas.height * 0.5;
+            this.color = optionColor || 'black';
+            this.reset();
+            container.appendChild(this.canvas);
+        }else{
+            console.warn('cont get Context2D from canvas');
+        }
+       
     }
     private color: string | Array<string>| Array<{offset: number, value: string }|string>;
     private context: CanvasRenderingContext2D;

@@ -11,10 +11,15 @@ export class WaveRolling extends AWaveRolling{
         super();
     }
 
-    static create(containner: HTMLElement, options?: WaveRollingOptions){
-        const waveRolling = new this()
-        waveRolling.init(containner, options);
-        return waveRolling;
+    static create(containner?: HTMLElement, options?: WaveRollingOptions){
+        if(containner instanceof HTMLElement){
+            const waveRolling = new this()
+            waveRolling.init(containner, options);
+            return waveRolling;    
+        }else{
+            throw `Type ERROR: container ${containner} must be HTMLElement!`
+        }
+        
     }
 
     /**
@@ -28,7 +33,7 @@ export class WaveRolling extends AWaveRolling{
         this.initDecoder();
     
         const { data, method } = (options||{data: null, method: null});
-        this.loadAudio(audioUrl, data, method);
+        this.loadAudio(audioUrl, data, method||'GET');
         
     }
 
@@ -45,7 +50,11 @@ export class WaveRolling extends AWaveRolling{
         if(this.decoder){
             this.decoder.abort();
         }
-        this.decoder = new this.plugins.Decorder();
+        if(this.plugins.Decorder){
+            this.decoder =  new this.plugins.Decorder();
+        }else{
+            throw `Decorder can not be ${ this.decoder }.`
+        }
         
         this.render.clear();
         this.render.reset();
@@ -87,45 +96,54 @@ export class WaveRolling extends AWaveRolling{
     private loadAudio(srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
         const controller: AbortController = (<any>window).AbortController && new AbortController()||{ signal: null, abort: () => {}};
         const signal = controller.signal;
-        const { url, fetchOptions } = this.plugins.DataTransformer( srcUrl, srcData, method  );
-        const option = {
-            signal,
-            method,
-            ...fetchOptions,
-        }
-        fetch( url, option ).then( rsp => {
-    
-            const fetchReader = rsp.body.getReader();
-    
-            this.decoder.onwaitting = () => fetchReader.read().then(data => {
-                if(!data.done){
-                    const buffer = new ArrayBuffer(data.value.length);
-                    const view = new Uint8Array(buffer);
-                    view.set(data.value);
-                    this.decoder.appendBuffer(buffer);
+        if(this.plugins.DataTransformer){
+            const { url, fetchOptions } = this.plugins.DataTransformer( srcUrl, srcData, method  );
+            const option = {
+                signal,
+                method,
+                ...fetchOptions,
+            }
+            fetch( url, option ).then( rsp => {
+        
+                const rspBody = rsp.body;
+                if(rspBody){
+
+                    const fetchReader = rspBody.getReader();
+        
+                    this.decoder.onwaitting = () => fetchReader.read().then(data => {
+                        if(!data.done){
+                            const buffer = new ArrayBuffer(data.value.length);
+                            const view = new Uint8Array(buffer);
+                            view.set(data.value);
+                            this.decoder.appendBuffer(buffer);
+                        }
+            
+                    }).catch(e => {
+                        console.error(e);
+                    });
+                    this.decoder.onabort = () => { 
+                        controller.abort(); 
+                        fetchReader.cancel().catch( error => {
+                            console.warn('WaveVisual load canceld.');
+                        });
+                    };
+            
+                    fetchReader.read().then( data => {
+                        const buffer = new ArrayBuffer(data.value.length);
+                        const view = new Uint8Array(buffer);
+                        view.set(data.value);
+                        this.decoder.decode(buffer);
+                    });
+                }else{
+                    console.warn('no response body.');
                 }
-    
-            }).catch(e => {
-                console.error(e);
-            });
-            this.decoder.onabort = () => { 
-                controller.abort(); 
-                fetchReader.cancel().catch( error => {
-                    console.warn('WaveVisual load canceld.');
-                });
-            };
-    
-            fetchReader.read().then( data => {
-                const buffer = new ArrayBuffer(data.value.length);
-                const view = new Uint8Array(buffer);
-                view.set(data.value);
-                this.decoder.decode(buffer);
-            });
-    
-                
-    
-        }).catch(e =>{
-            console.error(e)
-        })
+               
+            }).catch(e =>{
+                console.error(e)
+            })
+        }else{
+            throw `DataTransformer Can not be ${this.plugins.DataTransformer}`;
+        }
+        
     }
 }
