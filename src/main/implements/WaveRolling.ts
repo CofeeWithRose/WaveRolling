@@ -1,5 +1,6 @@
 import { AWaveRolling } from './AWaveRolling';
 import { WaveRollingOptions, WaveRollingLoadOptions } from '../interfaces/IWaveRolling';
+import { IWavDecoder } from '../../plugins/decoder/interfaces/IWavDecoder';
 
 
 
@@ -33,7 +34,7 @@ export class WaveRolling extends AWaveRolling{
         this.initDecoder();
     
         const { data, method } = (options||{data: null, method: null});
-        this.loadAudio(audioUrl, data, method||'GET');
+        this.loadAudio(this.decoder, audioUrl, data, method||'GET');
         
     }
 
@@ -93,7 +94,7 @@ export class WaveRolling extends AWaveRolling{
     }
 
 
-    private loadAudio(srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
+    private loadAudio(decoder: IWavDecoder, srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
         const controller: AbortController = (<any>window).AbortController && new AbortController()||{ signal: null, abort: () => {}};
         const signal = controller.signal;
         if(this.plugins.DataTransformer){
@@ -110,18 +111,18 @@ export class WaveRolling extends AWaveRolling{
 
                     const fetchReader = rspBody.getReader();
         
-                    this.decoder.onwaitting = () => fetchReader.read().then(data => {
+                    decoder.onwaitting = () => fetchReader.read().then(data => {
                         if(!data.done){
                             const buffer = new ArrayBuffer(data.value.length);
                             const view = new Uint8Array(buffer);
                             view.set(data.value);
-                            this.decoder.appendBuffer(buffer);
+                            decoder.appendBuffer(buffer);
                         }
             
                     }).catch(e => {
                         console.error(e);
                     });
-                    this.decoder.onabort = () => { 
+                    decoder.onabort = () => { 
                         controller.abort(); 
                         fetchReader.cancel().catch( error => {
                             console.warn('WaveVisual load canceld.');
@@ -132,7 +133,7 @@ export class WaveRolling extends AWaveRolling{
                         const buffer = new ArrayBuffer(data.value.length);
                         const view = new Uint8Array(buffer);
                         view.set(data.value);
-                        this.decoder.decode(buffer);
+                        decoder.decode(buffer);
                     });
                 }else{
                     console.warn('no response body.');

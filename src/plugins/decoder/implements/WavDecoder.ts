@@ -115,8 +115,8 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
     }
 
     abort() {
-        this.release();
         this.trigger('abort');
+        this.release();
     }
 
     private release(){
@@ -140,7 +140,6 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
         this.cachedDataByteLength = 0;
 
         this.cacheOffset = 0;
-        this.clearListener();
         this.decodeBufferPice = () => { }
         this.appendBuffer = () => { }
         this.onprocess = () => { }
