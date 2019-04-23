@@ -62,7 +62,6 @@ export class WaveRender extends AWaveRender {
 
     render(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
         let floatArrayData = audioBuffer.getChannelData(0);
-        floatArrayData = floatArrayData.map( val => Math.abs(val));
        
         const startX = Math.floor(this.canvas.width * startPercent);
         const endX = Math.floor(this.canvas.width * endPercent);
@@ -70,8 +69,9 @@ export class WaveRender extends AWaveRender {
         const yIndexStep = Math.floor(floatArrayData.length/ width)||1;
 
         this.context.beginPath();
-        this.context.lineWidth = 1.5;
-        for(let i = 0; i <= width; i++){
+        // this.context.miterLimit = value
+        this.context.lineWidth = 0.05;
+        for(let i = 0; i <= width; i+=0.015){
             const x = startX + i;
             const yIndex = Math.floor(yIndexStep * i);
             const dtY = Math.ceil( this.halfHeight * floatArrayData[yIndex]);
