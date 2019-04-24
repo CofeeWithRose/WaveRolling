@@ -35,7 +35,9 @@ if(containner instanceof HTMLElement){
             // scalable: true,
         }
     );
+    waveRolling.onerror = error => alert(error);
 }
+
 
 
 (<any>window).onSelect = function onSelect(event: Event){
