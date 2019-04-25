@@ -92,6 +92,13 @@ export class WaveRolling extends AWaveRolling{
     onabort(){
     }
 
+    private processError = (e: Error) => {
+        if('AbortError' !== e.name){
+            console.error(e.name)
+        }else{
+            console.warn('WaveVisual load canceld.');
+        }
+    }
 
     private loadAudio(decoder: IWavDecoder, srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
         const controller: AbortController = (<any>window).AbortController && new AbortController()||{ signal: null, abort: () => {}};
@@ -120,9 +127,7 @@ export class WaveRolling extends AWaveRolling{
                             decoder.appendBuffer(buffer);
                         }
             
-                    }).catch(e => {
-                        console.error(e);
-                    });
+                    }).catch(this.processError);
                    
             
                     fetchReader.read().then( data => {
@@ -135,13 +140,7 @@ export class WaveRolling extends AWaveRolling{
                     console.warn('no response body.');
                 }
                
-            }).catch(e =>{
-                if('AbortError' !== e.name){
-                    console.error(e.name)
-                }else{
-                    console.warn('WaveVisual load canceld.');
-                }
-            })
+            }).catch(this.processError);
         }else{
             throw `DataTransformer Can not be ${this.plugins.DataTransformer}`;
         }

@@ -20,5 +20,6 @@ export declare class WaveRolling extends AWaveRolling {
     abort(): void;
     onerror(error: Error): void;
     onabort(): void;
+    private processError;
     private loadAudio;
 }
