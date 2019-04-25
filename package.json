@@ -8,7 +8,8 @@
     "dev": "npm run build && npm run build_dev",
     "build": "./node_modules/.bin/webpack --mode=production && tsc",
     "start": "npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .ts src"
   },
   "author": "CofeeWithRose",
   "license": "ISC",

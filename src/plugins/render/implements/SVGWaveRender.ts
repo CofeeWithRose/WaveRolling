@@ -91,7 +91,7 @@ export class SVGWaveRender extends AWaveRender{
 
         if(color instanceof Array){
             const linearGradientContent = color.map<string>( (item, index) => {
-                if( 'string' == typeof item){
+                if( 'string' === typeof item){
                     return `<stop offset="${index*100/color.length-1}%" style="stop-color:${item};stop-opacity:1"/>`;
                 }else{
                     const { offset, value } = item;

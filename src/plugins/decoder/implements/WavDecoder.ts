@@ -260,7 +260,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
         segments.forEach(({ cacheIndex, offset, length, cacheOffset }) => {
 
-            if (cacheIndex - cacheOffset != this.lastCacheIndex) {
+            if (cacheIndex - cacheOffset !== this.lastCacheIndex) {
                 this.dataBufferCache.shift();
                 this.cacheOffset--;
                 this.lastCacheIndex = cacheIndex - cacheOffset;
