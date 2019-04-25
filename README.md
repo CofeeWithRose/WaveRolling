@@ -38,28 +38,28 @@ it only support wav format encoded PCM audio.
 	import { WaveRolling } from 'wave-rolling';// you shold execut " npm i wave-rolling " first.
 
 	// instance the WaveVisual.
-	const waveRolling = new WaveRolling(
+	const waveRolling = WaveRolling.create(
 		document.querySelector('#container'),// the container of canvas.
 	);
 	
-	window.onLoadAudio = function onLoadAudio(){
-		const data = {param1:1, param:2}; // the params while requesting the  audio. 
-		// load an draw wave in canvas.
-		waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
-	}
+	
+	const data = {param1:1, param:2}; // the params while requesting the  audio. 
+	// load an draw wave in canvas.
+	waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
+	
 	
 ### 颜色设置 color
 ----
 	import { WaveRolling } from 'wave-rolling';
 
 	// instance the WaveVisual.
-	const waveRolling = new WaveRolling(
+	const waveRolling =  WaveRolling.create(
 		document.querySelector('#container'),// the container of canvas.
 		{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']} // set the color of canvas.
 	);
 	
-	window.onLoadAudio = function onLoadAudio(){
-		const data = {param1:1, param:2}; // the params while requesting the  audio. 
-		// load an draw wave in canvas.
-		waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});
-	}
+	
+	const data = {param1:1, param:2}; // the params while requesting the  audio. 
+	
+	waveRolling.load(`source/${document.querySelector('#input').value}.wav`, {data});// load an draw wave in canvas.
+	
