@@ -3,9 +3,6 @@ import { WaveRollingOptions, WaveRollingLoadOptions } from '../interfaces/IWaveR
 import { IWavDecoder } from '../../plugins/decoder/interfaces/IWavDecoder';
 
 
-
-
-
 export class WaveRolling extends AWaveRolling{
 
     protected constructor(){
@@ -31,42 +28,46 @@ export class WaveRolling extends AWaveRolling{
      */
     load(audioUrl: string, options?: WaveRollingLoadOptions){
 
-        this.initDecoder();
+        const decoder = this.createDecoder();
     
         const { data, method } = (options||{data: null, method: null});
-        this.loadAudio(this.decoder, audioUrl, data, method||'GET');
+        this.loadAudio( decoder, audioUrl, data, method||'GET');
         
     }
 
     loadBlob(arrayBuffer: ArrayBuffer){
-        this.initDecoder();
-        this.decoder.decode(arrayBuffer);
+        const decoder = this.createDecoder();
+        decoder.decode(arrayBuffer);
 
         this.append = arrayBuffer => {
-            this.decoder.appendBuffer(arrayBuffer);
+            decoder.appendBuffer(arrayBuffer);
         }
     }
 
-    protected initDecoder(){
+    protected createDecoder(){
+
         if(this.decoder){
             this.decoder.abort();
         }
+
         if(this.plugins.Decorder){
+            
             this.decoder =  new this.plugins.Decorder();
+            this.render.clear();
+            this.render.reset();
+            this.decoder.onprocess = info => {
+                const {   audioBuffer, startTime, endTime, duration } = info;
+                this.render.render( audioBuffer, startTime/duration,  endTime/duration );
+            }
+            this.decoder.onerror = (error: Error) => {
+                this.onerror(error);
+                this.trigger('error', error);
+            };
+            return this.decoder;
         }else{
             throw `Decorder can not be ${ this.decoder }.`
         }
         
-        this.render.clear();
-        this.render.reset();
-        this.decoder.onprocess = info => {
-            const {   audioBuffer, startTime, endTime, duration } = info;
-            this.render.render( audioBuffer, startTime/duration,  endTime/duration );
-        }
-        this.decoder.onerror = (error: Error) => {
-            this.onerror(error);
-            this.trigger('error', error);
-        };
     }
 
     /**

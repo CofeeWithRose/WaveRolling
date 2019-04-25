@@ -1,5 +1,6 @@
 import { AWaveRolling } from './AWaveRolling';
 import { WaveRollingOptions, WaveRollingLoadOptions } from '../interfaces/IWaveRolling';
+import { IWavDecoder } from '../../plugins/decoder/interfaces/IWavDecoder';
 export declare class WaveRolling extends AWaveRolling {
     protected constructor();
     static create(containner?: HTMLElement, options?: WaveRollingOptions): WaveRolling;
@@ -11,7 +12,7 @@ export declare class WaveRolling extends AWaveRolling {
      */
     load(audioUrl: string, options?: WaveRollingLoadOptions): void;
     loadBlob(arrayBuffer: ArrayBuffer): void;
-    protected initDecoder(): void;
+    protected createDecoder(): IWavDecoder;
     /**
      * it can be user only after load ArrayBuffer.
      * @param {ArrayBuffer} arrayBuffer

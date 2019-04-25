@@ -49,6 +49,7 @@ if(containner instanceof HTMLElement){
     const reader = new FileReader();
     
     waveRolling.onabort = () => reader.abort();
+    waveRolling.addListener('error', e => console.log(e))
 
     reader.onload = () => waveRolling.loadBlob(<ArrayBuffer>reader.result);
 
