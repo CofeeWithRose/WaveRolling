@@ -119,6 +119,9 @@ export class WaveRolling extends AWaveRolling{
                 if(rspBody){
 
                     const fetchReader = rspBody.getReader();
+                    decoder.addListener('abort', () => { 
+                        fetchReader.cancel().catch(this.processError); 
+                    });
                     decoder.onwaitting = () => fetchReader.read().then(data => {
                         if(!data.done){
                             const buffer = new ArrayBuffer(data.value.length);

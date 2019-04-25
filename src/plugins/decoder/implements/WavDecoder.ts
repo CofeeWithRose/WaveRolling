@@ -242,7 +242,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
                     this.release();
                 }
 
-            }, (error) =>this.trigger('error', error));
+            }, (error) =>this.trigger('error', new Error('Format Error')));
         } else {
             this.trigger('waitting');
         }
