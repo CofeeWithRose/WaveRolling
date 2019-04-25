@@ -90,7 +90,6 @@ export class WaveRolling extends AWaveRolling{
     }
 
     onabort(){
-        // console.warn('WaveVisual abort.');
     }
 
 
@@ -104,13 +103,15 @@ export class WaveRolling extends AWaveRolling{
                 method,
                 ...fetchOptions,
             }
+            decoder.addListener('abort', () => { 
+                controller.abort(); 
+            });
             fetch( url, option ).then( rsp => {
         
                 const rspBody = rsp.body;
                 if(rspBody){
 
                     const fetchReader = rspBody.getReader();
-        
                     decoder.onwaitting = () => fetchReader.read().then(data => {
                         if(!data.done){
                             const buffer = new ArrayBuffer(data.value.length);
@@ -122,12 +123,7 @@ export class WaveRolling extends AWaveRolling{
                     }).catch(e => {
                         console.error(e);
                     });
-                    decoder.onabort = () => { 
-                        controller.abort(); 
-                        fetchReader.cancel().catch( error => {
-                            console.warn('WaveVisual load canceld.');
-                        });
-                    };
+                   
             
                     fetchReader.read().then( data => {
                         const buffer = new ArrayBuffer(data.value.length);
@@ -140,7 +136,11 @@ export class WaveRolling extends AWaveRolling{
                 }
                
             }).catch(e =>{
-                console.error(e)
+                if('AbortError' !== e.name){
+                    console.error(e.name)
+                }else{
+                    console.warn('WaveVisual load canceld.');
+                }
             })
         }else{
             throw `DataTransformer Can not be ${this.plugins.DataTransformer}`;

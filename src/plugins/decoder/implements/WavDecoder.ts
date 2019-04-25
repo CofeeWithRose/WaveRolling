@@ -142,8 +142,10 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
         this.cacheOffset = 0;
         this.decodeBufferPice = () => { }
         this.appendBuffer = () => { }
-        this.onprocess = () => { }
-        this.onwaitting = () => { }
+
+        this.removeListeners('process');
+        this.removeListeners('waitting');
+        this.removeListeners('complete');
 
     }
 

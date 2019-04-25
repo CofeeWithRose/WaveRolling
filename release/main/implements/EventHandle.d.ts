@@ -17,6 +17,7 @@ export declare class EventHandle<TriggersMap, EventsMap extends {
      * @param callback
      */
     removeListener<N extends keyof EventsMap>(name: N, callback: (info?: EventsMap[N]) => void): void;
+    removeListeners<N extends keyof EventsMap>(name: N): void;
     /**
      * 触发时间监听.
      * @param name

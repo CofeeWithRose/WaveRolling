@@ -29,8 +29,12 @@ export class EventHandle<TriggersMap, EventsMap extends {[N in keyof TriggersMap
      * @param callback 
      */
     removeListener< N extends keyof EventsMap >( name: N, callback: ( info?: EventsMap[N]) => void): void{
-        // this.listeners.removeListener( name, callback);
+        this.listeners.removeListener( <string>name, callback);
     };
+
+    removeListeners< N extends keyof EventsMap >(name: N): void {
+        this.listeners.removeListeners( <string>name);
+    }
 
     /**
      * 触发时间监听.

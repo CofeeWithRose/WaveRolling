@@ -11,6 +11,10 @@ export class Emiter implements IEmiter{
         funArray.push(fun);
     }
 
+    removeListeners(name: string|number){
+        delete this.eventMap[name];
+    }
+
     removeListener(name: string|number, fun: (...params: Array<any>) => void): void{
         const funArray = this.eventMap[name];
         if( funArray ){

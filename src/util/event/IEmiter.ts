@@ -11,6 +11,8 @@ export interface IEmiter{
 
     removeListener(name: string|number, fun: (...params: Array<any>) => void): void;
 
+    removeListeners(name: string|number): void;
+
     emit(name: string|number, ...params: Array<any>): void;
     
 }
