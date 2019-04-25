@@ -38,7 +38,7 @@ it only support wav format encoded PCM audio.
 	import { WaveRolling } from 'wave-rolling';// you shold execut " npm i wave-rolling " first.
 
 	// instance the WaveVisual.
-	const waveRolling = new WaveRolling(
+	const waveRolling = WaveRolling.create(
 		document.querySelector('#container'),// the container of canvas.
 	);
 	
@@ -53,7 +53,7 @@ it only support wav format encoded PCM audio.
 	import { WaveRolling } from 'wave-rolling';
 
 	// instance the WaveVisual.
-	const waveRolling = new WaveRolling(
+	const waveRolling =  WaveRolling.create(
 		document.querySelector('#container'),// the container of canvas.
 		{ color: [{ offset: 0.2, value: '#ff7373' }, '#37f5e3', '#fb8531']} // set the color of canvas.
 	);
