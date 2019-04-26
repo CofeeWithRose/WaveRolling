@@ -36,7 +36,7 @@ function strfyObject(data: any, curStr: string, prefix: string){
     }
     return curStr;
 };
-export function DataTransformer(url: string, data: any, method: 'GET'|'POST'|'PUT'|'DELETE'){
+export function DataTransformer(url: string, data: any, method: 'GET'|'POST'|'PUT'|'DELETE'): {url: string, fetchOptions: RequestInit}{
     url = url || '';
     method = method || 'GET';
     if( 'GET' === method ){
@@ -46,8 +46,9 @@ export function DataTransformer(url: string, data: any, method: 'GET'|'POST'|'PU
     }else{
         data = data instanceof FormData? data :  JSON.stringify(data);
     }
+    fetch
     return { 
         url, 
-        fetchOptions: { body: data, method } 
+        fetchOptions: { body: data, method, credentials: 'same-origin' }, 
     };
 }
