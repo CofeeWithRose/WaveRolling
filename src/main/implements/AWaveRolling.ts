@@ -5,8 +5,6 @@ import { SVGWaveRender } from "../../plugins/render/implements/SVGWaveRender";
 import { DataTransformer } from "../../plugins/data_transformer/DataTransformer";
 import { IWaveRender } from "../../plugins/render/interfaces/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interfaces/IWavDecoder";
-import { Emiter } from "../../util/event/Emiter";
-import { IEmiter } from "../../util/event/IEmiter";
 import { EventHandle } from "./EventHandle";
 
 let PLUGINS: InitWaveRollingPlugins = {

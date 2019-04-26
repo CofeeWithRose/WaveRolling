@@ -26,12 +26,12 @@ export class WaveRolling extends AWaveRolling{
      * @param audioUrl 
      * @param options 
      */
-    load(audioUrl: string, options?: WaveRollingLoadOptions){
+    load(audioUrl?: string, options?: WaveRollingLoadOptions){
 
         const decoder = this.createDecoder();
     
         const { data, method } = (options||{data: null, method: null});
-        this.loadAudio( decoder, audioUrl, data, method||'GET');
+        this.loadAudio( decoder, audioUrl||'', data, method||'GET');
         
     }
 
@@ -40,7 +40,9 @@ export class WaveRolling extends AWaveRolling{
         decoder.decode(arrayBuffer);
 
         this.append = arrayBuffer => {
-            decoder.appendBuffer(arrayBuffer);
+            if(arrayBuffer){
+                decoder.appendBuffer(arrayBuffer);
+            }
         }
     }
 
@@ -74,7 +76,7 @@ export class WaveRolling extends AWaveRolling{
      * it can be user only after load ArrayBuffer.
      * @param {ArrayBuffer} arrayBuffer 
      */
-    append(arrayBuffer: ArrayBuffer){
+    append(arrayBuffer?: ArrayBuffer){
         
     }
 
@@ -97,7 +99,7 @@ export class WaveRolling extends AWaveRolling{
         if('AbortError' !== e.name){
             console.error(e.name)
         }else{
-            console.warn('WaveVisual load canceld.');
+            console.warn('WaveRolling load canceld.');
         }
     }
 

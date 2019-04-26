@@ -13,7 +13,11 @@ module.exports = {
             }
         ],
         // 类和接口的命名必须遵守帕斯卡命名法，比如 PersianCat
-        'typescript/class-name-casing': 'error'
+        'typescript/class-name-casing': 'error',
+        'no-duplicate-imports': {
+            includeExports: true,
+            
+        }
     },
     "parserOptions": {
         "ecmaVersion": 6,
