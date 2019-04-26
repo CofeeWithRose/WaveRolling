@@ -20,7 +20,7 @@ export declare abstract class AWaveRolling extends EventHandle<WaveRollingEvents
         Decorder: new () => IWavDecoder;
         Render: new () => IWaveRender;
         HDRender: new () => IWaveRender;
-        DataTransformer: (url: string, data: any, method?: "GET" | "POST" | "PUT" | "DELETE" | undefined) => {
+        DataTransformer: (url: string, data: any, method?: "GET" | "PUT" | "DELETE" | "POST" | undefined) => {
             url: string;
             fetchOptions: RequestInit;
         };
