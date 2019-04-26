@@ -1,1 +1,2 @@
-export { WaveRolling } from "./main/implements/WaveRolling";
+import { WaveRolling } from "./main/implements/WaveRolling";
+export { WaveRolling };
