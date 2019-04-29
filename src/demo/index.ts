@@ -1,6 +1,7 @@
 import {  WaveRolling } from '../index';
 import {stringify} from 'qs';
 
+
 export function DataTransformer(url:string, data: any, method: "GET" | "PUT" | "DELETE" | "POST"){
     url = url || '';
     if( !method ||'GET' === method ){
@@ -61,6 +62,9 @@ if(containner instanceof HTMLElement){
     const data = {param1:['sad','asdda'], param:{asd:1, hjj:4, as:[1,2,3]}};
     waveRolling.load(`source/${(<HTMLInputElement>document.querySelector('#input')).value}.wav`, {data});
 };
+
+
+
 
 
 

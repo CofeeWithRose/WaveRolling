@@ -117,34 +117,38 @@ export class WaveRolling extends AWaveRolling{
                 controller.abort(); 
             });
             fetch( url, option ).then( rsp => {
-        
-                const rspBody = rsp.body;
-                if(rspBody){
-
-                    const fetchReader = rspBody.getReader();
-                    decoder.addListener('abort', () => { 
-                        fetchReader.cancel().catch(this.processError); 
-                    });
-                    decoder.onwaitting = () => fetchReader.read().then(data => {
-                        if(!data.done){
+                if(rsp.ok){
+                    const rspBody = rsp.body;
+                    if(rspBody){
+    
+                        const fetchReader = rspBody.getReader();
+                        decoder.addListener('abort', () => { 
+                            fetchReader.cancel().catch(this.processError); 
+                        });
+                        decoder.onwaitting = () => fetchReader.read().then(data => {
+                            if(!data.done){
+                                const buffer = new ArrayBuffer(data.value.length);
+                                const view = new Uint8Array(buffer);
+                                view.set(data.value);
+                                decoder.appendBuffer(buffer);
+                            }
+                
+                        }).catch(this.processError);
+                       
+                
+                        fetchReader.read().then( data => {
                             const buffer = new ArrayBuffer(data.value.length);
                             const view = new Uint8Array(buffer);
                             view.set(data.value);
-                            decoder.appendBuffer(buffer);
-                        }
-            
-                    }).catch(this.processError);
-                   
-            
-                    fetchReader.read().then( data => {
-                        const buffer = new ArrayBuffer(data.value.length);
-                        const view = new Uint8Array(buffer);
-                        view.set(data.value);
-                        decoder.decode(buffer);
-                    });
+                            decoder.decode(buffer);
+                        });
+                    }else{
+                        console.warn('no response body.');
+                    }
                 }else{
-                    console.warn('no response body.');
+                    this.onerror(new Error(`Request Error:  ${rsp.status}, url is [ ${url} ].`))
                 }
+               
                
             }).catch(this.processError);
         }else{

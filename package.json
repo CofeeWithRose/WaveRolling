@@ -6,7 +6,8 @@
   "scripts": {
     "build_dev": "./node_modules/.bin/webpack --mode development --watch",
     "dev": "npm run build && npm run build_dev",
-    "build": "./node_modules/.bin/webpack --mode=production && tsc",
+    "build": "./node_modules/.bin/webpack --mode=production && npm run tscompile",
+    "tscompile":"node ./node_modules/typescript/bin/tsc",
     "start": "npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts src"
