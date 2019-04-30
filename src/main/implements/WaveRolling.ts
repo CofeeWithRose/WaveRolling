@@ -97,7 +97,7 @@ export class WaveRolling extends AWaveRolling{
 
     private processError = (e: Error) => {
         if('AbortError' !== e.name){
-            console.error(e.name)
+            console.error(e)
         }else{
             console.warn('WaveRolling load canceld.');
         }

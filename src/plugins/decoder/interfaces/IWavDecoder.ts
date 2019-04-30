@@ -7,8 +7,8 @@ export interface RangeSegment{
     cacheOffset: number;
 }
 export class DataBufferRange{
-    length: number;
-    segments: Array<RangeSegment>;
+    length = 0;
+    segments = new Array<RangeSegment>();
 }
 
 export interface DecodedInfo {

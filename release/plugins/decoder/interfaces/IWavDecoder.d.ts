@@ -7,7 +7,7 @@ export interface RangeSegment {
 }
 export declare class DataBufferRange {
     length: number;
-    segments: Array<RangeSegment>;
+    segments: RangeSegment[];
 }
 export interface DecodedInfo {
     audioBuffer: AudioBuffer;
