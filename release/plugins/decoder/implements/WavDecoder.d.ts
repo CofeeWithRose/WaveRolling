@@ -19,7 +19,7 @@ export declare class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, Wa
     private tempBufferRange;
     private lastCacheIndex;
     private cacheOffset;
-    private byteSpeed;
+    private ByteRate;
     private duration;
     private dataLengthOffset;
     /**

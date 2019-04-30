@@ -50,7 +50,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
     private cacheOffset: number;
 
-    private byteSpeed: number;
+    private ByteRate: number;
 
     private duration: number;
 
@@ -68,19 +68,19 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
         this.dataBufferRangeList = [];
 
-        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitWide, byteSpeed, duration } = this.getWavInfo(firstPiceArrayBuffer);
+        const { sampleRate, numOfChannels, headBuffer, dataBuffer, totalDataByteLength, bitsPerSample, ByteRate, duration } = this.getWavInfo(firstPiceArrayBuffer);
 
-        this.perDataBufferPiceLength = 1 * sampleRate * numOfChannels * bitWide/8;
+        this.perDataBufferPiceLength = 1 * sampleRate * numOfChannels * bitsPerSample/8;
 
-        this.byteSpeed = byteSpeed;
+        this.ByteRate = ByteRate;
 
         this.duration = duration;
 
-	let OfflineAudioContext = (<any>window).OfflineAudioContext||(<any>window).webkitOfflineAudioContext;
-	if(!OfflineAudioContext){
-	    this.onerror(new Error('Not Suport Error'));
-	    throw 'Not Suport Error';
-	}
+        let OfflineAudioContext = (<any>window).OfflineAudioContext||(<any>window).webkitOfflineAudioContext;
+        if(!OfflineAudioContext){
+            this.onerror(new Error('Not Suport Error'));
+            throw 'Not Suport Error';
+        }
         this.audioContext = new OfflineAudioContext(1, this.perDataBufferPiceLength, 44100);
 
         this.totalDataBufferLength = totalDataByteLength;
@@ -111,7 +111,9 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
         this.cacheDataBufferList(buffer);
         if (!isCacheComplete && isWaitting) {
             this.decodeBufferPice();
+
         }
+        
     }
 
     abort() {
@@ -127,7 +129,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
         this.perDataBufferPiceLength = 0;
 
-        this.byteSpeed = 0;
+        this.ByteRate = 0;
 
         this.duration = 0;
 
@@ -218,13 +220,14 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
 
         const dataRange = this.dataBufferRangeList.shift();
         if (dataRange) {
+            
             const audioData = this.getRangeAuidoBuffer(dataRange);
             // const audio = document.createElement('audio');
             // audio.controls = true;
             // audio.src = URL.createObjectURL(new File([audioData], 'audio.wav',{type: 'audo/wav'}));
             // document.body.appendChild(audio);
             this.audioContext.decodeAudioData(audioData, audioBuffer => {
-                const startTime = this.decodedDataByteLength/this.byteSpeed;
+                const startTime = this.decodedDataByteLength/this.ByteRate;
                 this.decodedDataByteLength += dataRange.length;
                 const isComplete = this.decodedDataByteLength >= this.totalDataBufferLength;
                 if(!isComplete){
@@ -233,7 +236,7 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
                 this.trigger('process', {
                     audioBuffer,
                     startTime,
-                    endTime: this.decodedDataByteLength/this.byteSpeed,
+                    endTime: this.decodedDataByteLength/this.ByteRate,
                     duration: this.duration,
                 });
                 if (isComplete) {
@@ -295,20 +298,21 @@ export class WavDecoder extends EventHandle<WaveDecoderEventsTrigger, WaveDecode
         this.dataLengthOffset = this.getDataOffset(view);
         const totalDataByteLength = view.getUint32(this.dataLengthOffset, true);
         const numOfChannels = view.getUint16(22, true);
-        const bitWide = view.getUint16(34, true);
         const sampleRate = view.getUint32(24, true);
-        const byteSpeed = view.getUint32( 28, true);
+        const ByteRate = view.getUint32( 28, true);
+        const bitsPerSample = view.getUint16(34, true);
+
         const headBuffer = buffer.slice(0, this.dataLengthOffset + 4);
         const dataBuffer = buffer.slice(this.dataLengthOffset + 4, this.dataLengthOffset + 4 + totalDataByteLength);
         return {
-            bitWide,
+            bitsPerSample,
             sampleRate,
             numOfChannels,
             headBuffer,
             dataBuffer,
             totalDataByteLength,
-            byteSpeed,
-            duration: totalDataByteLength/byteSpeed,
+            ByteRate,
+            duration: totalDataByteLength/ByteRate,
         };
     }
 

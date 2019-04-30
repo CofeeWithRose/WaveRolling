@@ -125,12 +125,14 @@ export class WaveRolling extends AWaveRolling{
                         decoder.addListener('abort', () => { 
                             fetchReader.cancel().catch(this.processError); 
                         });
-                        decoder.onwaitting = () => fetchReader.read().then(data => {
+
+                        let readData = () => fetchReader.read().then(data => {
                             if(!data.done){
                                 const buffer = new ArrayBuffer(data.value.length);
                                 const view = new Uint8Array(buffer);
                                 view.set(data.value);
                                 decoder.appendBuffer(buffer);
+                                readData();
                             }
                 
                         }).catch(this.processError);
@@ -141,6 +143,7 @@ export class WaveRolling extends AWaveRolling{
                             const view = new Uint8Array(buffer);
                             view.set(data.value);
                             decoder.decode(buffer);
+                            readData();
                         });
                     }else{
                         console.warn('no response body.');
