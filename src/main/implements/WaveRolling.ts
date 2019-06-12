@@ -103,7 +103,7 @@ export class WaveRolling extends AWaveRolling{
         }
     }
 
-    private loadAudio(decoder: IWavDecoder, srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ){
+    private async loadAudio(decoder: IWavDecoder, srcUrl: string, srcData: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ) {
         const controller: AbortController = (<any>window).AbortController && new AbortController()||{ signal: null, abort: () => {}};
         const signal = controller.signal;
         if(this.plugins.DataTransformer){
@@ -116,7 +116,9 @@ export class WaveRolling extends AWaveRolling{
             decoder.addListener('abort', () => { 
                 controller.abort(); 
             });
-            fetch( url, option ).then( rsp => {
+            try{
+                const rsp = await fetch( url, option );
+
                 if(rsp.ok){
                     const rspBody = rsp.body;
                     if(rspBody){
@@ -126,34 +128,39 @@ export class WaveRolling extends AWaveRolling{
                             fetchReader.cancel().catch(this.processError); 
                         });
 
-                        let readData = () => fetchReader.read().then(data => {
-                            if(!data.done){
-                                const buffer = new ArrayBuffer(data.value.length);
-                                const view = new Uint8Array(buffer);
-                                view.set(data.value);
-                                decoder.appendBuffer(buffer);
-                                readData();
+                        let readData = async () => {
+                            try{
+                                const data = await fetchReader.read();
+                                if(!data.done){
+                                    const buffer = new ArrayBuffer(data.value.length);
+                                    const view = new Uint8Array(buffer);
+                                    view.set(data.value);
+                                    decoder.appendBuffer(buffer);
+                                    readData();
+                                }
+                            }catch(error){
+                                this.processError(error);
                             }
+                           
+                        }
                 
-                        }).catch(this.processError);
-                       
-                
-                        fetchReader.read().then( data => {
-                            const buffer = new ArrayBuffer(data.value.length);
-                            const view = new Uint8Array(buffer);
-                            view.set(data.value);
-                            decoder.decode(buffer);
-                            readData();
-                        });
+                        const data = await fetchReader.read();
+                        const buffer = new ArrayBuffer(data.value.length);
+                        const view = new Uint8Array(buffer);
+                        view.set(data.value);
+                        decoder.decode(buffer);
+                        readData();
+
                     }else{
                         console.warn('no response body.');
                     }
                 }else{
                     this.onerror(new Error(`Request Error:  ${rsp.status}, url is [ ${url} ].`))
                 }
-               
-               
-            }).catch(this.processError);
+            }catch(error){
+                this.processError(error);
+            }
+           ``
         }else{
             throw `DataTransformer Can not be ${this.plugins.DataTransformer}`;
         }
