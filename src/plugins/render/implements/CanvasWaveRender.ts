@@ -61,22 +61,24 @@ export class WaveRender extends AWaveRender {
 
 
     render(audioBuffer: AudioBuffer, startPercent: number, endPercent: number){
-        let floatArrayData = audioBuffer.getChannelData(0);
-       
+        const floatArrayDataList = [];
+        for(let i =0 ; i< audioBuffer.numberOfChannels; i++){
+            floatArrayDataList.push(audioBuffer.getChannelData(i));
+        }
+
         const startX = Math.floor(this.canvas.width * startPercent);
         const endX = Math.floor(this.canvas.width * endPercent);
         const width = (endX - startX)||10;
-        const yIndexStep = Math.floor(floatArrayData.length/ width)||1;
+        const yIndexStep = Math.floor(floatArrayDataList[0].length/ width)||1;
 
         this.context.beginPath();
         this.context.lineWidth = 0.5;
         for(let i = 0; i <= width; i+= 0.25){
             const x = startX + i;
             const yIndex = Math.floor(yIndexStep * i);
-            const dtY = Math.max( 0.7, Math.abs( this.halfHeight * floatArrayData[yIndex]) );
+            const dtY = Math.max( 0.7, ...floatArrayDataList.map( floatArrayData => Math.abs( this.halfHeight * floatArrayData[yIndex] ) )  );
             this.context.moveTo( x,  this.halfHeight + dtY);
             this.context.lineTo( x,  this.halfHeight - dtY);
-
         }
         this.context.stroke();
     }
