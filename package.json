@@ -1,6 +1,6 @@
 {
   "name": "wave-rolling",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "description": "show large(more than 1G) wav audio in canvas",
   "main": "./release/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "lint": "eslint --ext .ts src"
   },
   "author": "CofeeWithRose",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
