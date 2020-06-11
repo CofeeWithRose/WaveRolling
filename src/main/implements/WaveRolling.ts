@@ -145,10 +145,12 @@ export class WaveRolling extends AWaveRolling{
                         }
                 
                         const data = await fetchReader.read();
-                        const buffer = new ArrayBuffer(data.value.length);
-                        const view = new Uint8Array(buffer);
-                        view.set(data.value);
-                        decoder.decode(buffer);
+                        if(data&&data.value) {
+                          const buffer = new ArrayBuffer(data.value.length);
+                          const view = new Uint8Array(buffer);
+                          view.set(data.value);
+                          decoder.decode(buffer);
+                        }
                         readData();
 
                     }else{

@@ -3,10 +3,6 @@ import { IWavDecoder, WaveDecoderEventsTrigger, WaveDecoderEvents } from '../../
 import { IEventHandle } from './IEventHandle';
 import { WaveRenderEvents, WaveRenderEventsTrigger } from '../../plugins/render/interfaces/IWaveRenderEvents';
 export interface WaveRollingOptions extends WaveRenderOptions {
-    /**
-     * 是否可缩放
-     */
-    scalable?: boolean;
 }
 export interface WaveRollingLoadOptions {
     data?: object;
@@ -15,7 +11,6 @@ export interface WaveRollingLoadOptions {
 export interface InitWaveRollingPlugins {
     Decorder: new () => IWavDecoder;
     Render: new () => IWaveRender;
-    HDRender: new () => IWaveRender;
     DataTransformer: (url: string, data: any, method?: 'GET' | 'POST' | 'PUT' | 'DELETE') => {
         url: string;
         fetchOptions: RequestInit;

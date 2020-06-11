@@ -13,7 +13,7 @@ let PLUGINS: InitWaveRollingPlugins = {
     
     Render: WaveRender,
     
-    HDRender: SVGWaveRender,
+    // HDRender: SVGWaveRender,
 
     DataTransformer,
 
@@ -23,7 +23,7 @@ export interface WaveRollingOptions extends WaveRenderOptions{
     /**
      * 是否可缩放
      */
-    scalable?: boolean;
+    // scalable?: boolean;
 }
 
 export interface WaveRollingLoadOptions {
@@ -39,7 +39,7 @@ export interface InitWaveRollingPlugins  {
 
     Render: new () => IWaveRender;
 
-    HDRender: new () => IWaveRender;
+    // HDRender?: new () => IWaveRender;
 
     DataTransformer:   ( url: string, data: any, method?: 'GET'|'POST'|'PUT'|'DELETE' ) => 
                         { url: string, fetchOptions: RequestInit };

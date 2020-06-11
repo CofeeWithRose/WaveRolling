@@ -1,7 +1,6 @@
 import { WaveRollingPlugins, IWaveRolling, WaveRollingEvents, WaveRollingEventsTrigger, WaveRollingOptions, InitWaveRollingPlugins } from "../interfaces/IWaveRolling";
 import { WavDecoder } from "../../plugins/decoder/implements/WavDecoder";
 import { WaveRender } from "../../plugins/render/implements/CanvasWaveRender";
-import { SVGWaveRender } from "../../plugins/render/implements/SVGWaveRender";
 import { DataTransformer } from "../../plugins/data_transformer/DataTransformer";
 import { IWaveRender } from "../../plugins/render/interfaces/IWaveRender";
 import { IWavDecoder } from "../../plugins/decoder/interfaces/IWavDecoder";
@@ -13,7 +12,7 @@ let PLUGINS: InitWaveRollingPlugins = {
     
     Render: WaveRender,
     
-    HDRender: SVGWaveRender,
+    // HDRender: SVGWaveRender,
 
     DataTransformer,
 
@@ -65,8 +64,8 @@ export abstract class AWaveRolling extends EventHandle<WaveRollingEventsTrigger,
 
     protected init(containner: HTMLElement, options?: WaveRollingOptions){
         this.plugins = { ...PLUGINS };
-        const { color, scalable } = options||{ color: '', scalable: false };
-        this.render = scalable? new this.plugins.HDRender() : new this.plugins.Render();
+        const { color } = options||{ color: '', scalable: false };
+        this.render =  new this.plugins.Render();
         this.render.init( containner, { color } );
     }
 
